@@ -1,5 +1,4 @@
 # Solved-problems
 
 Codeforces：http://codeforces.com/
-
-hdu:http://acm.hdu.edu.cn/
+hdu：http://acm.hdu.edu.cn/
