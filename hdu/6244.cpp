@@ -1,19 +1,3 @@
-////////////////////System Comment////////////////////
-////Welcome to Hangzhou Dianzi University Online Judge
-////http://acm.hdu.edu.cn
-//////////////////////////////////////////////////////
-////Username: tokitsukaze
-////Nickname: tokitsukaze
-////Run ID: 
-////Submit time: 2018-04-08 18:18:38
-////Compiler: GUN C++
-//////////////////////////////////////////////////////
-////Problem ID: 6244
-////Problem Title: 
-////Run result: Accept
-////Run time:0MS
-////Run memory:1684KB
-//////////////////System Comment End//////////////////
 #include <bits/stdc++.h>
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #define mem(a,b) memset((a),(b),sizeof(a))
