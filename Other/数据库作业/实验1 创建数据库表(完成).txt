@@ -1,0 +1,73 @@
+create table udept (
+	did varchar(2) primary key,
+	dname varchar(20) not NULL,
+	daddr varchar(20),
+	dtel varchar(16),
+	demail varchar(30)
+);
+
+create table uteacher(
+	tid smallint primary key,
+	tname varchar(20) not NULL,
+	tsexy varchar(2) not NULL,
+	tbdate datetime not NULL,
+	tfield varchar(20) not NULL,
+	tprof varchar(10) not NULL,
+	tele varchar(20) not NULL,
+	qq varchar(20),
+	email varchar(30),
+	msn varchar(30),
+	did varchar(2) references udept(did),
+);
+
+create table ugrade(
+	gid smallint primary key,
+	gname varchar(40) not NULL,
+	gyear varchar(4),
+	did varchar(2) references udept(did),
+	tid smallint references uteacher(tid),
+);
+
+create table ucourse(
+	cid smallint primary key,
+	cname varchar(40) not NULL,
+	credit smallint not NULL,
+	pcid smallint,
+	chour smallint not NULL,
+	cattr varchar(10) not NULL,
+	cnum smallint not NULL,
+	did varchar(2) references udept(did)
+);
+
+create table ustudent(
+	sid varchar(20) primary key,
+	sname varchar(10) not NULL,
+	ssexy varchar(2) not NULL,
+	sbdate datetime not NULL,
+	gid smallint references ugrade(gid),
+	stele varchar(16) not NULL
+);
+
+
+
+create table ujobtable(
+	jid smallint primary key,
+	cid smallint references ucourse(cid),
+	room varchar(20) not NULL,
+	tid smallint references uteacher(tid),
+	week smallint not NULL,
+	timeseg smallint not NULL,
+	gid smallint references ugrade(gid),
+	term varchar(20) not NULL
+);
+
+create table usc(
+	scid smallint primary key,
+	sid varchar(20) references ustudent(sid),
+	cid smallint references ucourse(cid),
+	term varchar(20) not NULL,
+	score1 smallint,
+	score2 smallint,
+	score3 smallint,
+	score smallint
+);
