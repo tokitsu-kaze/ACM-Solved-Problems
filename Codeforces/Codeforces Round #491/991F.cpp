@@ -21,11 +21,11 @@ struct str_hash{size_t operator()(const string& str)const{return __stl_hash_stri
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3f;
 const double PI=acos(-1.0);
-/***************************************  head  **********************************************/
-
 const double eps=1e-4;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
+/***************************************  head  **********************************************/
+
 map<ll,string> mp;
 set<ll> s[11];
 ll n;
