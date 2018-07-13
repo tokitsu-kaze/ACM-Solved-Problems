@@ -45,7 +45,7 @@ namespace Tarjan
 				k++;
 				continue;
 			}
-			if(!low[to])
+			if(!dfn[to])
 			{
 				dfs(to,x);
 				low[x]=min(low[x],low[to]);
