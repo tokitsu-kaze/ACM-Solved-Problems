@@ -4,6 +4,8 @@ Aizu：http://judge.u-aizu.ac.jp/onlinejudge/
 
 AtCoder：https://atcoder.jp/
 
+bzoj：https://www.lydsy.com/JudgeOnline/wttl/wttl.php
+
 CS Academy：https://csacademy.com/
 
 Codeforces：http://codeforces.com/
