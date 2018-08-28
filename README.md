@@ -1,19 +1,19 @@
 # Solved-problems
 
 #### count of solved problems
-	Aizu			          4
-	AtCoder		         44
-	bzoj		            1
-	CS Academy			   73
-	codeforces		    763
-	fzu		             44
-	gym				         53
-	hdu			         1032
-	nbut			        100
-	poj				        171
-	sgu	               12
-	zoj			          235
-	Other Contest	     99
+	Aizu                   4
+	AtCoder               44
+	bzoj                   1
+	CS Academy            73
+	codeforces           763
+	fzu                   44
+	gym                   53
+	hdu                 1032
+	nbut                 100
+	poj                  171
+	sgu                   12
+	zoj                  235
+	Other Contest         99
 
 `total : 2631`
 
