@@ -5,15 +5,15 @@ namespace fastIO{
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;}
-/*	inline char nc(){
+//	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;}
+	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
 			p1=buf;pend=buf+fread(buf,1,BUF_SIZE,stdin);
 			if(pend==p1){IOerror=1;return -1;}
 		}
 		return *p1++;
-	}*/
+	}
 	inline bool blank(char ch){return ch==' '||ch=='\n'||ch=='\r'||ch=='\t';}
 	template<class T> inline bool read(T &x){
 		bool sign=0;char ch=nc();x=0;
