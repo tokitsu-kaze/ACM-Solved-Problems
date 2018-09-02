@@ -1,4 +1,4 @@
-# ACM-Solved-Problems
+﻿# ACM-Solved-Problems
 
 #### count of solved problems
 	Aizu                   4
@@ -14,9 +14,9 @@
 	poj                  171
 	sgu                   12
 	zoj                  235
-	Other Contest        101
+	Other Contest        103
 
-`total : 2864`
+`total : 2866`
 
 
 #### link
