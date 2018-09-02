@@ -10,12 +10,13 @@
 	gym                   53
 	hdu                 1032
 	nbut                 100
+	NIT                  231
 	poj                  171
 	sgu                   12
 	zoj                  235
 	Other Contest        101
 
-`total : 2633`
+`total : 2864`
 
 
 #### link
@@ -37,6 +38,8 @@ gym：http://codeforces.com/gyms
 hdu：http://acm.hdu.edu.cn/
 
 nbut：https://ac.2333.moe/
+
+NIT：https://www.nitacm.com/
 
 poj：http://poj.org/
 
