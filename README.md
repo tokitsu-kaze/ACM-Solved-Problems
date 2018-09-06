@@ -1,13 +1,13 @@
 ﻿# ACM-Solved-Problems
 
 #### count of solved problems
-	Aizu                   4
+	Aizu                   6
 	AtCoder               45
 	bzoj                   2
 	CS Academy            73
 	codeforces           768
 	fzu                   44
-	gym                   55
+	gym                   57
 	hdu                 1041
 	nbut                 100
 	NIT                  231
@@ -16,7 +16,7 @@
 	zoj                  235
 	Other Contest        103
 
-`total : 2884`
+`total : 2888`
 
 
 #### link
