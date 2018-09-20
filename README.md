@@ -13,10 +13,10 @@
 	NIT                  231
 	poj                  171
 	sgu                   12
-	zoj                  237
+	zoj                  239
 	Other Contest        103
 
-`total : 2908`
+`total : 2910`
 
 
 #### link
