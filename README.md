@@ -8,15 +8,15 @@
 	codeforces           801
 	fzu                   44
 	gym                   57
-	hdu                 1042
+	hdu                 1043
 	nbut                 100
 	NIT                  231
-	poj                  171
+	poj                  173
 	sgu                   12
-	zoj                  239
+	zoj                  240
 	Other Contest        116
 
-`total : 2940`
+`total : 2944`
 
 
 #### link
