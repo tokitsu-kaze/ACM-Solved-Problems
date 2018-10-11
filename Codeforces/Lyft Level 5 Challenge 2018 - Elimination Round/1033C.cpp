@@ -3,6 +3,7 @@ using namespace std;
 namespace fastIO{
 	#define BUF_SIZE 100000
 	#define OUT_SIZE 100000
+	#define ll long long
 	//fread->read
 	bool IOerror=0;
 //	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
@@ -51,6 +52,7 @@ namespace fastIO{
 		return true; 
 	}
 	template<class T,class... U>bool read(T& h,U&... t){return read(h)&&read(t...);}
+	#undef ll
 	#undef OUT_SIZE
 	#undef BUF_SIZE
 };
@@ -102,19 +104,32 @@ const double eps=1e-6;
 const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
+int dp[MAX],pos[MAX],x[MAX];
+char ans[MAX];
 void go()
 {
-	ll n,i,m;
-	double now;
+	int n,i,j;
 	while(read(n))
 	{
-		now=0;
-		m=0;
-		while(now<n)
+		for(i=1;i<=n;i++)
 		{
-			m++;
-			now+=(1.0*(m+2))/(m*(m+1));
+			read(x[i]);
+			pos[x[i]]=i;
 		}
-		printf("%lld\n",m-1);
+		mem(dp,0);
+		for(i=n;i;i--)
+		{
+			for(j=pos[i]+i;j<=n;j+=i)
+			{
+				if(x[j]>i) dp[pos[i]]|=!dp[j];
+			}
+			for(j=pos[i]-i;j>=1;j-=i)
+			{
+				if(x[j]>i) dp[pos[i]]|=!dp[j];
+			}
+		}
+		for(i=1;i<=n;i++) ans[i]='A'+(dp[i]^1);
+		ans[n+1]='\0';
+		puts(ans+1);
 	}
 }

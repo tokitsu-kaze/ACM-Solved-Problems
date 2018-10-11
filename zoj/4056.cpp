@@ -3,6 +3,7 @@ using namespace std;
 namespace fastIO{
 	#define BUF_SIZE 100000
 	#define OUT_SIZE 100000
+	#define ll long long
 	//fread->read
 	bool IOerror=0;
 //	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
@@ -51,6 +52,7 @@ namespace fastIO{
 		return true; 
 	}
 	template<class T,class... U>bool read(T& h,U&... t){return read(h)&&read(t...);}
+	#undef ll
 	#undef OUT_SIZE
 	#undef BUF_SIZE
 };
@@ -99,25 +101,36 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3f;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e6+10;
-const ll mod=4000000000000000007LL;
+const int MAX=1e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-ll dp[MAX];
 void go()
 {
-	int i,n;
-	dp[0]=1;
-	for(i=1;i<=MAX-10;i++)
+	int T;
+	ll a,b,c,d,v,t,g,lcm,i,ans,tmp;
+	read(T);
+	while(T--)
 	{
-		if(i-1>=0) dp[i]+=dp[i-1];
-		dp[i]%=mod;
-		if(i-2>=0) dp[i]+=dp[i-2];
-		dp[i]%=mod;
-		if(i-5>=0) dp[i]+=dp[i-5];
-		dp[i]%=mod;
-	}
-	while(read(n))
-	{
-		printf("%lld\n",dp[n]);
+		read(a,b,c,d,v,t);
+		g=__gcd(a,c);
+		lcm=a*c/g;
+		VL res;	
+		for(i=0;i<=lcm;i+=a) res.pb(i);
+		for(i=0;i<=lcm;i+=c) res.pb(i);
+		sort(all(res));
+		res.resize(unique(all(res))-res.begin());
+		tmp=0;
+		for(i=1;i<sz(res);i++)
+		{
+			if(res[i]-res[i-1]>v) tmp++;  
+		}
+		ans=(t/a)*b+(t/c)*d+b+d-1; 
+		ans-=t/lcm*tmp; 
+		t%=lcm;
+		for(i=1;i<sz(res)&&res[i]<=t;i++)
+		{
+			if(res[i]-res[i-1]>v) ans--;	
+		}
+		printf("%lld\n",ans);
 	}
 }

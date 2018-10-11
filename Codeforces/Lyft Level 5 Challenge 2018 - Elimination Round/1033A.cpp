@@ -3,6 +3,7 @@ using namespace std;
 namespace fastIO{
 	#define BUF_SIZE 100000
 	#define OUT_SIZE 100000
+	#define ll long long
 	//fread->read
 	bool IOerror=0;
 //	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
@@ -51,6 +52,7 @@ namespace fastIO{
 		return true; 
 	}
 	template<class T,class... U>bool read(T& h,U&... t){return read(h)&&read(t...);}
+	#undef ll
 	#undef OUT_SIZE
 	#undef BUF_SIZE
 };
@@ -100,33 +102,21 @@ const ll LLINF=0x3f3f3f3f3f3f3f3f;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=1e5+10;
-const ll mod=4000000000000000007LL;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-//A018819
-ll dp[MAX];
 void go()
 {
-	int n,i;
-	dp[0]=1;
-	for(i=1;i<=MAX-10;i++)
-	{
-		if(i&1) dp[i]=dp[i-1];
-		else dp[i]=dp[i-1]+dp[i/2];
-		dp[i]%=mod;
-	}
+	int n,x,y,a,b,c,d,e,f,g,h;
 	while(read(n))
 	{
-/*		ll ans=0;
-		function<void(int)> dfs=[&](int now)
-		{
-			if(!now)
-			{
-				ans++;
-				return;
-			}
-			for(int i=now/2;~i;i--) dfs(i);
-		};
-		dfs(n);*/
-		printf("%lld\n",dp[n]);
+		read(x,y);
+		read(a,b);
+		read(c,d);
+		e=a<x;
+		f=b<y;
+		g=c<x;
+		h=d<y;
+		if(e==g&&f==h) puts("YES");
+		else puts("NO");
 	}
 }
