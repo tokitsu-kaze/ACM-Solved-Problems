@@ -8,7 +8,7 @@
 	codeforces           840
 	fzu                   44
 	gym                   57
-	hdu                 1054
+	hdu                 1055
 	nbut                 100
 	NIT                  231
 	poj                  181
@@ -16,7 +16,7 @@
 	zoj                  245
 	Other Contest        137
 
-`total : 3036`
+`total : 3037`
 
 
 #### link
