@@ -1,7 +1,7 @@
 ﻿# ACM-Solved-Problems
 
 #### count of solved problems
-	Aizu                   6
+	Aizu                   7
 	AtCoder               45
 	bzoj                  11
 	CS Academy            73
@@ -17,7 +17,7 @@
 	zoj                  249
 	Other Contest        137
 
-`total : 3104`
+`total : 3105`
 
 
 #### link
