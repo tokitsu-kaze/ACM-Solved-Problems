@@ -7,17 +7,17 @@
 	CS Academy            73
 	codeforces           858
 	fzu                   44
-	gym                   84
+	gym                   85
 	hdu                 1057
 	nbut                 100
 	NIT                  231
 	Project Euler         29
-	poj                  181
+	poj                  183
 	sgu                   12
 	zoj                  249
 	Other Contest        137
 
-`total : 3118`
+`total : 3121`
 
 
 #### link
