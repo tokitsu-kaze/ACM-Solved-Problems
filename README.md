@@ -5,9 +5,9 @@
 	AtCoder               45
 	bzoj                  11
 	CS Academy            73
-	codeforces           858
+	codeforces           861
 	fzu                   44
-	gym                   86
+	gym                   88
 	hdu                 1057
 	nbut                 100
 	NIT                  231
@@ -17,7 +17,7 @@
 	zoj                  249
 	Other Contest        137
 
-`total : 3122`
+`total : 3127`
 
 
 #### link
