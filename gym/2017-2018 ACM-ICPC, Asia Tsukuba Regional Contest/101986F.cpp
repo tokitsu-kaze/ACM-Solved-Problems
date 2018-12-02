@@ -113,7 +113,7 @@ struct node
 vector<node> mp[2][MAX];
 bool flag[MAX];
 ll dis[2][MAX],cnt[2][MAX];
-int id[MAX],n;
+int n;
 void dij(int f,int s)
 {
 	int i;
@@ -121,6 +121,8 @@ void dij(int f,int s)
 	node t,to;
 	mem(dis[f],0x3f);
 	mem(flag,0);
+	mem(cnt[f],0);
+	cnt[f][s]=1;
 	dis[f][s]=0;
 	q.push(node(s,0));
 	while(!q.empty())
@@ -134,20 +136,15 @@ void dij(int f,int s)
 			to=mp[f][t.id][i];
 			if(dis[f][to.id]>dis[f][t.id]+to.v)
 			{
+				cnt[f][to.id]=cnt[f][t.id];
 				dis[f][to.id]=dis[f][t.id]+to.v;
 				q.push(node(to.id,dis[f][to.id]));
 			}
-		}
-	}
-	for(i=1;i<=n;i++) id[i]=i;
-	sort(id+1,id+1+n,[&](int a,int b){return dis[f][a]<dis[f][b];});
-	mem(cnt[f],0);
-	cnt[f][s]=1;
-	for(i=1;i<=n;i++)
-	{
-		for(auto to:mp[f][id[i]])
-		{
-			if(dis[f][id[i]]+to.v==dis[f][to.id]) (cnt[f][to.id]+=cnt[f][id[i]])%=mod;
+			else if(dis[f][to.id]==dis[f][t.id]+to.v)
+			{
+				cnt[f][to.id]+=cnt[f][t.id];
+				cnt[f][to.id]%=mod;
+			}
 		}
 	}
 }
