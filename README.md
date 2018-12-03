@@ -12,12 +12,12 @@
 	nbut                 100
 	NIT                  231
 	Project Euler         29
-	poj                  184
+	poj                  186
 	sgu                   12
-	zoj                  250
+	zoj                  251
 	Other Contest        137
 
-`total : 3159`
+`total : 3162`
 
 
 #### link
