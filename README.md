@@ -11,11 +11,12 @@
 	hdu                 1069
 	nbut                 100
 	NIT                  231
+	nowcoder              72
 	Project Euler         29
 	poj                  187
 	sgu                   12
 	zoj                  251
-	Other Contest        137
+	Other Contest         65
 
 `total : 3207`
 
@@ -41,6 +42,8 @@ hdu：http://acm.hdu.edu.cn/
 nbut：https://ac.2333.moe/
 
 NIT：https://www.nitacm.com/
+
+nowcoder：https://ac.nowcoder.com/acm/contest/vip-index
 
 Project Euler：https://projecteuler.net/archives
 
