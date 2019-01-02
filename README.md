@@ -11,14 +11,14 @@
 	hdu                 1069
 	nbut                 100
 	NIT                  231
-	nowcoder              72
+	nowcoder              78
 	Project Euler         29
 	poj                  187
 	sgu                   12
 	zoj                  251
 	Other Contest         65
 
-`total : 3207`
+`total : 3213`
 
 
 #### link
