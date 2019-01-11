@@ -3,7 +3,7 @@
 #### count of solved problems
 	Aizu                   7
 	AtCoder               45
-	bzoj                  12
+	bzoj                  13
 	CS Academy            73
 	codeforces           924
 	fzu                   44
@@ -18,7 +18,7 @@
 	zoj                  251
 	Other Contest         65
 
-`total : 3230`
+`total : 3231`
 
 
 #### link
