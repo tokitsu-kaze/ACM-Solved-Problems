@@ -110,6 +110,7 @@ void go()
 	{
 		len=strlen(s+1);
 		ans=0;
+		pos=-1;
 		for(i=1;i<=len;i++)
 		{
 			if(s[i]=='[')
@@ -146,7 +147,7 @@ void go()
 			}
 			if(s[i]=='|') ans--;
 		}
-		if(flag!=2) puts("-1");
+		if(flag!=2||pos==-1) puts("-1");
 		else printf("%d\n",ans+flag);
 	}
 }
