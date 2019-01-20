@@ -6,19 +6,19 @@
 	bzoj                  13
 	CS Academy            73
 	codeforces           944
-	fzu                   44
+	fzu                   45
 	gym                  103
-	hdu                 1071
+	hdu                 1072
 	nbut                 100
 	NIT                  231
 	nowcoder              78
 	Project Euler         29
-	poj                  187
+	poj                  188
 	sgu                   12
-	zoj                  251
+	zoj                  252
 	Other Contest         65
 
-`total : 3259`
+`total : 3263`
 
 
 #### link
