@@ -4,8 +4,8 @@
 	Aizu                   7
 	AtCoder               51
 	bzoj                  13
-	CS Academy            73
 	Codeforces           949
+	CS Academy            73
 	fzu                   45
 	gym                  103
 	hdu                 1073
