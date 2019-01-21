@@ -8,17 +8,17 @@
 	Codeforces           949
 	fzu                   45
 	gym                  103
-	hdu                 1072
+	hdu                 1073
 	nbut                 100
 	NIT                  231
 	nowcoder              78
 	Project Euler         29
 	poj                  188
 	sgu                   12
-	zoj                  252
+	zoj                  253
 	Other Contest         65
 
-`total : 3268`
+`total : 3270`
 
 
 #### link
