@@ -8,7 +8,7 @@
 	CS Academy            73
 	fzu                   45
 	gym                  103
-	hdu                 1078
+	hdu                 1079
 	nbut                 100
 	NIT                  231
 	nowcoder              78
@@ -18,7 +18,7 @@
 	zoj                  253
 	Other Contest         65
 
-`total : 3323`
+`total : 3324`
 
 
 #### link
