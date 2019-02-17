@@ -15,10 +15,10 @@
 	Project Euler         29
 	poj                  190
 	sgu                   12
-	zoj                  253
+	zoj                  256
 	Other Contest         65
 
-`total : 3390`
+`total : 3393`
 
 
 #### link
