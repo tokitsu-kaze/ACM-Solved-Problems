@@ -226,14 +226,17 @@ struct Segment_Tree
 		if(qr>mid) update(mid+1,r,rs);
 		pushup(id);
 	}
-	Base query(int l,int r,int id)
+	Base res;
+	void query(int l,int r,int id)
 	{
-		Base res;
-		if(l>=ql&&r<=qr) return v[id];
+		if(l>=ql&&r<=qr)
+		{
+			res.merge(v[id]);
+			return;
+		}
 		int mid=(l+r)>>1;
-		if(ql<=mid) res=query(l,mid,ls);
-		if(qr>mid) res.merge(query(mid+1,r,rs));
-		return res;
+		if(ql<=mid) query(l,mid,ls);
+		if(qr>mid) query(mid+1,r,rs);
 	}
 	void build(int _n){n=_n;build(1,n,1);}
 	void upd(int l,int r,type v)
@@ -248,7 +251,9 @@ struct Segment_Tree
 		if(l>r) return Base();
 		ql=l;
 		qr=r;
-		return query(1,n,1);
+		res.init();
+		query(1,n,1);
+		return res;
 	}
 	#undef type
 	#undef ls
