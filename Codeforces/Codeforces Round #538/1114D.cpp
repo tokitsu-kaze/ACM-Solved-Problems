@@ -117,10 +117,10 @@ int dfs(int l,int r)
 }
 void go()
 {
-	mem(dp,-1);
 	int n,i;
 	while(read(n))
 	{
+		mem(dp,-1);
 		for(i=1;i<=n;i++) read(a[i]);
 		res.clear();
 		res.pb(a[1]);
