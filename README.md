@@ -3,8 +3,8 @@
 #### count of solved problems
 	Aizu                   7
 	AtCoder               62
-	bzoj                  14
-	Codeforces          1079
+	bzoj                  17
+	Codeforces          1081
 	CS Academy            73
 	fzu                   45
 	gym                  103
@@ -15,10 +15,11 @@
 	Project Euler         29
 	poj                  191
 	sgu                   12
+	uoj                    1
 	zoj                  259
 	Other Contest         65
 
-`total : 3472`
+`total : 3478`
 
 
 #### link
@@ -50,5 +51,7 @@ Project Euler：https://projecteuler.net/archives
 poj：http://poj.org/
 
 sgu：http://codeforces.com/problemsets/acmsguru
+
+uoj：http://uoj.ac/
 
 zoj：http://acm.zju.edu.cn/onlinejudge/
