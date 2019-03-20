@@ -108,88 +108,62 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-9;
-const int MAX=1e5+10;
+const int MAX=2e5+10;
 const ll mod=1000000007;
 /*********************************  head  *********************************/
-struct Fenwick_Tree
+string gao(int n,int k)
 {
-	#define type ll
-	type bit[MAX];
-	int n;
-	void init(int _n){n=_n;mem(bit,0);}
-	int lowbit(int x){return x&(-x);}
-	void insert(int x,type v)
+	if(n<10) return to_string(k);
+	int s,now,h,tmp,i,red,sd;
+	s=9;
+	now=1;
+	h=0;
+	while(n>s)
 	{
-		while(x<=n)
-		{
-			bit[x]+=v;
-			x+=lowbit(x);
-		}
+		now*=10;
+		h++;
+		s+=9*now;
 	}
-	type get(int x)
+	red=n-(now-1);
+	tmp=n-(now-1);
+	while(now!=1)
 	{
-		type res=0;
-		while(x)
-		{
-			res+=bit[x];
-			x-=lowbit(x);
-		}
-		return res;
+		n/=10;
+		now/=10;
+		tmp+=n-(now-1);
 	}
-	#undef type
-}tr[2];
-struct node
-{
-	ll op,a,b;
-	void in(){read(op,a,b);}
-}qst[MAX];
-VI tmp;
-ll gao(ll x)
-{
-	int l,r,mid;
-	l=1;
-	r=100000;
-	while(l<r)
+	if(k>tmp)
 	{
-		mid=(l+r)>>1;
-		if(tr[0].get(mid)>x) r=mid;
-		else l=mid+1;
+		h--;
+		k-=red;
 	}
-	ll res=tr[1].get(l);
-	ll t=tr[0].get(l);
-	if(t>x)
+	now=0;
+	VI v(h+1,0);
+	sd=1;
+	for(i=0;i<=h;i++)
 	{
-		res=(res-(t-x)*tmp[l-1])%mod;
-		res=(res+mod)%mod;
+		now+=sd;
+		v[h-i]=now;
+		sd*=10;
+	}
+	string res;
+	res+=(k-1)/now+1+'0';
+	now=(k-1)%now;
+	for(i=1;i<=h&&now;i++)
+	{
+		now--;
+		res+=now/v[i]+'0';
+		now%=v[i];
 	}
 	return res;
 }
 void go()
 {
-	int q,i;
-	while(read(q))
+	int t,n,k;
+	read(t);
+	while(t--)
 	{
-		tmp.clear();
-		for(i=1;i<=q;i++)
-		{
-			qst[i].in();
-			if(qst[i].op==1) tmp.pb(qst[i].b);
-		}
-		sort(all(tmp));
-		tmp.resize(unique(all(tmp))-tmp.begin());
-		map<int,int> mp;
-		for(i=0;i<sz(tmp);i++) mp[tmp[i]]=i+1;
-		tr[0].init(100000);
-		tr[1].init(100000);
-		for(i=1;i<=q;i++)
-		{
-			if(qst[i].op==1)
-			{
-				tr[0].insert(mp[qst[i].b],qst[i].a);
-				tr[1].insert(mp[qst[i].b],qst[i].a*qst[i].b%mod);
-			}
-			else if(qst[i].op==2) printf("%lld\n",(gao(qst[i].b)-gao(qst[i].a-1)+mod)%mod);
-		}
+		read(n,k);
+		cout<<gao(n,k)<<"\n";
 	}
 }
-

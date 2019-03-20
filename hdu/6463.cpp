@@ -108,88 +108,43 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-9;
-const int MAX=1e5+10;
+const int MAX=3e6+10;
 const ll mod=1000000007;
 /*********************************  head  *********************************/
-struct Fenwick_Tree
-{
-	#define type ll
-	type bit[MAX];
-	int n;
-	void init(int _n){n=_n;mem(bit,0);}
-	int lowbit(int x){return x&(-x);}
-	void insert(int x,type v)
-	{
-		while(x<=n)
-		{
-			bit[x]+=v;
-			x+=lowbit(x);
-		}
-	}
-	type get(int x)
-	{
-		type res=0;
-		while(x)
-		{
-			res+=bit[x];
-			x-=lowbit(x);
-		}
-		return res;
-	}
-	#undef type
-}tr[2];
-struct node
-{
-	ll op,a,b;
-	void in(){read(op,a,b);}
-}qst[MAX];
-VI tmp;
-ll gao(ll x)
-{
-	int l,r,mid;
-	l=1;
-	r=100000;
-	while(l<r)
-	{
-		mid=(l+r)>>1;
-		if(tr[0].get(mid)>x) r=mid;
-		else l=mid+1;
-	}
-	ll res=tr[1].get(l);
-	ll t=tr[0].get(l);
-	if(t>x)
-	{
-		res=(res-(t-x)*tmp[l-1])%mod;
-		res=(res+mod)%mod;
-	}
-	return res;
-}
+int tag[MAX];
 void go()
 {
-	int q,i;
-	while(read(q))
+	VI res;
+	mem(tag,0);
+	for(int i=1;sz(res)<150000;i++)
 	{
-		tmp.clear();
-		for(i=1;i<=q;i++)
+		int now=i;
+		int mp[1010]={0};
+		while(1)
 		{
-			qst[i].in();
-			if(qst[i].op==1) tmp.pb(qst[i].b);
-		}
-		sort(all(tmp));
-		tmp.resize(unique(all(tmp))-tmp.begin());
-		map<int,int> mp;
-		for(i=0;i<sz(tmp);i++) mp[tmp[i]]=i+1;
-		tr[0].init(100000);
-		tr[1].init(100000);
-		for(i=1;i<=q;i++)
-		{
-			if(qst[i].op==1)
+			int s=0;
+			while(now>0)
 			{
-				tr[0].insert(mp[qst[i].b],qst[i].a);
-				tr[1].insert(mp[qst[i].b],qst[i].a*qst[i].b%mod);
+				s+=sqr(now%10);
+				now/=10;
 			}
-			else if(qst[i].op==2) printf("%lld\n",(gao(qst[i].b)-gao(qst[i].a-1)+mod)%mod);
+			if(s==1||tag[s])
+			{
+				res.pb(i);
+				tag[i]=1;
+				break;
+			}
+			if(mp[s]) break;
+			mp[s]=1;
+			now=s;
 		}
+	}
+	int t,k;
+	read(t);
+	while(t--)
+	{
+		read(k);
+		printf("%d\n",res[k-1]);
 	}
 }
 

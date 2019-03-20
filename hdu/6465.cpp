@@ -108,87 +108,62 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-9;
-const int MAX=1e5+10;
-const ll mod=1000000007;
+const int MAX=2e5+10;
+const ll mod=123456789;
 /*********************************  head  *********************************/
-struct Fenwick_Tree
-{
-	#define type ll
-	type bit[MAX];
-	int n;
-	void init(int _n){n=_n;mem(bit,0);}
-	int lowbit(int x){return x&(-x);}
-	void insert(int x,type v)
-	{
-		while(x<=n)
-		{
-			bit[x]+=v;
-			x+=lowbit(x);
-		}
-	}
-	type get(int x)
-	{
-		type res=0;
-		while(x)
-		{
-			res+=bit[x];
-			x-=lowbit(x);
-		}
-		return res;
-	}
-	#undef type
-}tr[2];
-struct node
-{
-	ll op,a,b;
-	void in(){read(op,a,b);}
-}qst[MAX];
-VI tmp;
-ll gao(ll x)
-{
-	int l,r,mid;
-	l=1;
-	r=100000;
-	while(l<r)
-	{
-		mid=(l+r)>>1;
-		if(tr[0].get(mid)>x) r=mid;
-		else l=mid+1;
-	}
-	ll res=tr[1].get(l);
-	ll t=tr[0].get(l);
-	if(t>x)
-	{
-		res=(res-(t-x)*tmp[l-1])%mod;
-		res=(res+mod)%mod;
-	}
-	return res;
-}
+double mp[5][5];
+pair<double,double> s[5],t[5];
 void go()
 {
-	int q,i;
-	while(read(q))
+	int T,i;
+	scanf("%d",&T);
+	while(T--)
 	{
-		tmp.clear();
-		for(i=1;i<=q;i++)
+		for(i=1;i<=3;i++) scanf("%lf%lf",&s[i].fi,&s[i].se);
+		for(i=1;i<=3;i++) scanf("%lf%lf",&t[i].fi,&t[i].se);
+		mp[2][1]=(t[1].fi*s[1].fi
+				-t[3].fi*s[1].fi
+				-t[1].fi*s[2].fi
+				+t[3].fi*s[2].fi
+				-t[1].fi*s[1].fi
+				+t[2].fi*s[1].fi
+				+t[1].fi*s[3].fi
+				-t[2].fi*s[3].fi)
+				/(s[2].se*s[1].fi
+				-s[1].se*s[1].fi
+				-s[2].se*s[3].fi
+				+s[1].se*s[3].fi
+				-s[3].se*s[1].fi
+				+s[1].se*s[1].fi
+				+s[3].se*s[2].fi
+				-s[1].se*s[2].fi);
+		mp[1][1]=(mp[2][1]*s[2].se-mp[2][1]*s[1].se+t[1].fi-t[2].fi)/(s[1].fi-s[2].fi);
+		mp[3][1]=t[1].fi-mp[1][1]*s[1].fi-mp[2][1]*s[1].se;
+		mp[2][2]=(t[1].se*s[1].fi
+				-t[3].se*s[1].fi
+				-t[1].se*s[2].fi
+				+t[3].se*s[2].fi
+				-t[1].se*s[1].fi
+				+t[2].se*s[1].fi
+				+t[1].se*s[3].fi
+				-t[2].se*s[3].fi)
+				/(s[2].se*s[1].fi
+				-s[1].se*s[1].fi
+				-s[2].se*s[3].fi
+				+s[1].se*s[3].fi
+				-s[3].se*s[1].fi
+				+s[1].se*s[1].fi
+				+s[3].se*s[2].fi
+				-s[1].se*s[2].fi);
+		mp[1][2]=(mp[2][2]*s[2].se-mp[2][2]*s[1].se+t[1].se-t[2].se)/(s[1].fi-s[2].fi);
+		mp[3][2]=t[1].se-mp[1][2]*s[1].fi-mp[2][2]*s[1].se;
+		int q;
+		scanf("%d",&q);
+		while(q--)
 		{
-			qst[i].in();
-			if(qst[i].op==1) tmp.pb(qst[i].b);
-		}
-		sort(all(tmp));
-		tmp.resize(unique(all(tmp))-tmp.begin());
-		map<int,int> mp;
-		for(i=0;i<sz(tmp);i++) mp[tmp[i]]=i+1;
-		tr[0].init(100000);
-		tr[1].init(100000);
-		for(i=1;i<=q;i++)
-		{
-			if(qst[i].op==1)
-			{
-				tr[0].insert(mp[qst[i].b],qst[i].a);
-				tr[1].insert(mp[qst[i].b],qst[i].a*qst[i].b%mod);
-			}
-			else if(qst[i].op==2) printf("%lld\n",(gao(qst[i].b)-gao(qst[i].a-1)+mod)%mod);
+			double x,y;
+			scanf("%lf%lf",&x,&y);
+			printf("%.2f %.2f\n",x*mp[1][1]+y*mp[2][1]+mp[3][1],x*mp[1][2]+y*mp[2][2]+mp[3][2]);
 		}
 	}
 }

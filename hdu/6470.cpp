@@ -108,88 +108,80 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-9;
-const int MAX=1e5+10;
-const ll mod=1000000007;
+const int MAX=2e5+10;
+const ll mod=123456789;
 /*********************************  head  *********************************/
-struct Fenwick_Tree
+struct Matrix
 {
-	#define type ll
-	type bit[MAX];
-	int n;
-	void init(int _n){n=_n;mem(bit,0);}
-	int lowbit(int x){return x&(-x);}
-	void insert(int x,type v)
+	ll c[7][7],n;
+	Matrix(){}
+	Matrix(ll a,ll v=0)
 	{
-		while(x<=n)
+		int i,j;
+		n=a;
+		for(i=0;i<n;i++)
 		{
-			bit[x]+=v;
-			x+=lowbit(x);
+			for(j=0;j<n;j++)
+			{
+				c[i][j]=v;
+			}
 		}
 	}
-	type get(int x)
+	Matrix operator *(const Matrix &b)const
 	{
-		type res=0;
-		while(x)
+		int i,j,k;
+		Matrix res(n);
+		for(k=0;k<n;k++)
 		{
-			res+=bit[x];
-			x-=lowbit(x);
+			for(i=0;i<n;i++)
+			{
+				if(!c[i][k]) continue;
+				for(j=0;j<n;j++)
+				{
+					res.c[i][j]+=c[i][k]*b.c[k][j];
+					if(res.c[i][j]>=mod) res.c[i][j]%=mod;
+				}
+			}
 		}
 		return res;
 	}
-	#undef type
-}tr[2];
-struct node
+};
+Matrix matpow2(Matrix a,ll b)
 {
-	ll op,a,b;
-	void in(){read(op,a,b);}
-}qst[MAX];
-VI tmp;
-ll gao(ll x)
-{
-	int l,r,mid;
-	l=1;
-	r=100000;
-	while(l<r)
+	Matrix res(a.n);
+	for(int i=0;i<a.n;i++)
 	{
-		mid=(l+r)>>1;
-		if(tr[0].get(mid)>x) r=mid;
-		else l=mid+1;
+		res.c[i][i]=1;
 	}
-	ll res=tr[1].get(l);
-	ll t=tr[0].get(l);
-	if(t>x)
+	while(b)
 	{
-		res=(res-(t-x)*tmp[l-1])%mod;
-		res=(res+mod)%mod;
+		if(b&1) res=res*a;
+		a=a*a;
+		b>>=1;
 	}
 	return res;
 }
 void go()
 {
-	int q,i;
-	while(read(q))
+	int t;
+	ll n;
+	read(t);
+	while(t--)
 	{
-		tmp.clear();
-		for(i=1;i<=q;i++)
-		{
-			qst[i].in();
-			if(qst[i].op==1) tmp.pb(qst[i].b);
-		}
-		sort(all(tmp));
-		tmp.resize(unique(all(tmp))-tmp.begin());
-		map<int,int> mp;
-		for(i=0;i<sz(tmp);i++) mp[tmp[i]]=i+1;
-		tr[0].init(100000);
-		tr[1].init(100000);
-		for(i=1;i<=q;i++)
-		{
-			if(qst[i].op==1)
-			{
-				tr[0].insert(mp[qst[i].b],qst[i].a);
-				tr[1].insert(mp[qst[i].b],qst[i].a*qst[i].b%mod);
-			}
-			else if(qst[i].op==2) printf("%lld\n",(gao(qst[i].b)-gao(qst[i].a-1)+mod)%mod);
-		}
+		read(n);
+		Matrix a(6),tmp(6);
+		tmp.c[0][0]=tmp.c[0][2]=tmp.c[0][5]=tmp.c[1][0]=tmp.c[2][2]=tmp.c[2][5]=1;
+		tmp.c[3][3]=tmp.c[3][5]=tmp.c[4][4]=tmp.c[4][5]=tmp.c[5][5]=1;
+		tmp.c[0][1]=tmp.c[3][4]=2;
+		tmp.c[0][3]=tmp.c[0][4]=tmp.c[2][3]=tmp.c[2][4]=3;
+		a.c[0][0]=2;
+		a.c[1][0]=1;
+		a.c[2][0]=8;
+		a.c[3][0]=4;
+		a.c[4][0]=2;
+		a.c[5][0]=1;
+		if(n==1) puts("1");
+		else if(n==2) puts("2");
+		else printf("%lld\n",(matpow2(tmp,n-2)*a).c[0][0]);
 	}
 }
-
