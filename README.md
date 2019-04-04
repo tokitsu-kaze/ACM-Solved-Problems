@@ -8,18 +8,18 @@
 	CS Academy            73
 	fzu                   45
 	gym                  103
-	hdu                 1103
+	hdu                 1104
 	nbut                 100
 	NIT                  231
 	nowcoder             117
 	Project Euler         29
-	poj                  192
+	poj                  193
 	sgu                   12
 	uoj                    1
-	zoj                  260
+	zoj                  261
 	Other Contest         65
 
-`total : 3526`
+`total : 3529`
 
 
 #### link
