@@ -16,10 +16,10 @@
 	poj                  195
 	sgu                   12
 	uoj                    1
-	zoj                  262
+	zoj                  266
 	Other Contest         65
 
-`total : 3559`
+`total : 3563`
 
 
 #### link
