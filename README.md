@@ -4,11 +4,11 @@
 	Aizu                   7
 	AtCoder               78
 	bzoj                  19
-	Codeforces          1282
+	Codeforces          1285
 	CS Academy            73
 	fzu                   45
 	gym                  103
-	hdu                 1199
+	hdu                 1200
 	nbut                 100
 	NIT                  231
 	nowcoder             132
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         65
 
-`total : 3838`
+`total : 3842`
 
 
 #### link
