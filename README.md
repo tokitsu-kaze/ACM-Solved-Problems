@@ -4,7 +4,7 @@
 	Aizu                   7
 	AtCoder               78
 	bzoj                  19
-	Codeforces          1291
+	Codeforces          1292
 	CS Academy            73
 	fzu                   45
 	gym                  103
