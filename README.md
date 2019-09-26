@@ -3,8 +3,8 @@
 #### count of solved problems
 	Aizu                   7
 	AtCoder               78
-	bzoj                  20
-	Codeforces          1334
+	bzoj                  21
+	Codeforces          1342
 	CS Academy            73
 	fzu                   45
 	gym                  103
@@ -13,13 +13,13 @@
 	NIT                  231
 	nowcoder             158
 	Project Euler         29
-	poj                  196
+	poj                  197
 	sgu                   12
 	uoj                    1
 	zoj                  266
 	Other Contest         65
 
-`total : 3934`
+`total : 3944`
 
 
 #### link
