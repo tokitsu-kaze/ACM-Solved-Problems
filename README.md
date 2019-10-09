@@ -7,8 +7,8 @@
 	Codeforces          1354
 	CS Academy            73
 	fzu                   45
-	gym                  108
-	hdu                 1217
+	gym                  118
+	hdu                 1227
 	nbut                 100
 	NIT                  231
 	nowcoder             158
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         65
 
-`total : 3961`
+`total : 3981`
 
 
 #### link
