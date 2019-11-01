@@ -4,7 +4,7 @@
 	Aizu                   7
 	AtCoder               78
 	bzoj                  21
-	Codeforces          1403
+	Codeforces          1408
 	CS Academy            73
 	fzu                   45
 	gym                  118
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         65
 
-`total : 4030`
+`total : 4035`
 
 
 #### link
