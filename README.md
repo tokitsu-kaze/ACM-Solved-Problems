@@ -4,7 +4,7 @@
 	Aizu                   7
 	AtCoder               93
 	bzoj                  24
-	Codeforces          1712
+	Codeforces          1733
 	CS Academy            73
 	fzu                   45
 	gym                  148
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         84
 
-`total : 4426`
+`total : 4447`
 
 `total during the school : 4402 (2016/09/01 - 2020/06/03)`
 
