@@ -4,14 +4,14 @@
 	Aizu                   7
 	AtCoder               93
 	bzoj                  24
-	Codeforces          1739
+	Codeforces          1767
 	CS Academy            73
 	fzu                   45
 	gym                  148
 	hdu                 1244
 	nbut                 100
 	NIT                  231
-	nowcoder             161
+	nowcoder             170
 	Project Euler         29
 	poj                  197
 	sgu                   12
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         84
 
-`total : 4453`
+`total : 4490`
 
 `total during the school : 4402 (2016/09/01 - 2020/06/03)`
 
