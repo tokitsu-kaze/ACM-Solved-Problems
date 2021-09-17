@@ -2,16 +2,16 @@
 
 #### count of solved problems
 	Aizu                   7
-	AtCoder               93
+	AtCoder              110
 	bzoj                  24
-	Codeforces          1767
+	Codeforces          1869
 	CS Academy            73
 	fzu                   45
-	gym                  148
-	hdu                 1244
+	gym                  159
+	hdu                 1246
 	nbut                 100
 	NIT                  231
-	nowcoder             170
+	nowcoder             176
 	Project Euler         29
 	poj                  197
 	sgu                   12
@@ -19,7 +19,7 @@
 	zoj                  266
 	Other Contest         84
 
-`total : 4490`
+`total : 4628`
 
 `total during the school : 4402 (2016/09/01 - 2020/06/03)`
 
