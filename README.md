@@ -2,7 +2,7 @@
 
 #### count of solved problems
 	Aizu                   7
-	AtCoder              110
+	AtCoder              122
 	bzoj                  24
 	Codeforces          1869
 	CS Academy            73
