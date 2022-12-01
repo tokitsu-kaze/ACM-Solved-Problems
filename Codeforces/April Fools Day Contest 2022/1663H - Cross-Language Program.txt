@@ -1,0 +1,6 @@
+// \
+(*
+int main(int ar, char **)
+{}
+// \
+begin end.
