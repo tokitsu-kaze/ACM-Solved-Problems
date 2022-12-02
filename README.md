@@ -8,7 +8,7 @@
 	CS Academy            73
 	fzu                   45
 	gym                  159
-	hdu                 1246
+	hdu                 1277
 	nbut                 100
 	NIT                  231
 	nowcoder             210
