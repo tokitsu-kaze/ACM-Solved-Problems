@@ -4,11 +4,13 @@
 	Aizu                   7
 	AtCoder              122
 	bzoj                  24
-	Codeforces          1869
+	Codeforces             -
+	CodeChef              18
 	CS Academy            73
 	fzu                   45
-	gym                  159
+	gym                  161
 	hdu                 1277
+	Luogu                 46
 	nbut                 100
 	NIT                  231
 	nowcoder             210
@@ -19,7 +21,7 @@
 	zoj                  266
 	Other Contest         84
 
-`total : 4628`
+`total : -`
 
 `total during the school : 4402 (2016/09/01 - 2020/06/03)`
 
@@ -32,6 +34,8 @@ AtCoder：https://atcoder.jp/
 
 bzoj：https://www.lydsy.com/JudgeOnline/wttl/wttl.php
 
+CodeChef：https://www.codechef.com/
+
 Codeforces：http://codeforces.com/
 
 CS Academy：https://csacademy.com/
@@ -41,6 +45,8 @@ fzu：http://acm.fzu.edu.cn/
 gym：http://codeforces.com/gyms
 
 hdu：http://acm.hdu.edu.cn/
+
+Luogu：https://www.luogu.com.cn/
 
 nbut：https://ac.2333.moe/
 
