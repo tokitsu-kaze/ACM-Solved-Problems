@@ -5,11 +5,12 @@
 	AtCoder              122
 	bzoj                  24
 	Codeforces             -
-	CodeChef              19
+	CodeChef              22
 	CS Academy            73
 	fzu                   45
 	gym                  161
 	hdu                 1277
+	LeetCode             171
 	Luogu                 46
 	nbut                 100
 	NIT                  231
@@ -45,6 +46,8 @@ fzu：http://acm.fzu.edu.cn/
 gym：http://codeforces.com/gyms
 
 hdu：http://acm.hdu.edu.cn/
+
+LeetCode：https://leetcode.cn/problemset/all/
 
 Luogu：https://www.luogu.com.cn/
 
