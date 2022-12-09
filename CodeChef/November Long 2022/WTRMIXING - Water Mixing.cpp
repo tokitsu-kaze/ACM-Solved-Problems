@@ -98,8 +98,7 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII> VPII;
-vector<string> VS;
+typedef vector<PII > VPII;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -120,17 +119,20 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
-const ll mod=998244353;
+const int MAX=1e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
 void go()
 {
-	int t,a,b;
+	int t,a,b,x,y;
 	read(t);
 	while(t--)
 	{
-		read(a,b);
-		if(a>b) puts("YES");
+		read(a,b,x,y);
+		if(a>b && a-b<=y) puts("YES");
+		else if(a<b && b-a<=x) puts("YES");
+		else if(a==b) puts("YES");
 		else puts("NO");
 	}
 }
+
