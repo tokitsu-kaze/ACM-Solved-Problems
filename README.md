@@ -5,12 +5,12 @@
 	AtCoder              122
 	bzoj                  24
 	Codeforces             -
-	CodeChef              31
+	CodeChef              32
 	CS Academy            73
 	fzu                   45
 	gym                  161
 	hdu                 1277
-	LeetCode             185
+	LeetCode             191
 	Luogu                 46
 	nbut                 100
 	NIT                  231
