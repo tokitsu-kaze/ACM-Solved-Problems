@@ -5,18 +5,18 @@
 	AtCoder              122
 	bzoj                  24
 	Codeforces             -
-	CodeChef              50
+	CodeChef              51
 	CS Academy            73
 	fzu                   45
 	gym                  161
 	hdu                 1277
-	LeetCode             203
-	Luogu                 46
+	LeetCode             204
+	Luogu                 48
 	nbut                 100
 	NIT                  231
 	nowcoder             212
 	Project Euler         29
-	poj                  197
+	poj                  198
 	sgu                   12
 	uoj                    1
 	zoj                  266
