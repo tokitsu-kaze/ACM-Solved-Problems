@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,90 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
+const double eps=1e-5;
+const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
+ll pow2(ll a,ll b)
+{
+	ll res=1;
+	while(b>0)
+	{
+		if(b&1) res=res*a%mod;
+		a=a*a%mod;
+		b>>=1;
+	}
+	return res;
+}
+ll inv(ll x){return pow2(x,mod-2);}
+ll fac[MAX],invfac[MAX];
+void init(int n)
+{
+	fac[0]=1;
+	for(int i=1;i<=n;i++) fac[i]=fac[i-1]*i%mod;
+	invfac[n]=inv(fac[n]);
+	for(int i=n-1;~i;i--) invfac[i]=invfac[i+1]*(i+1)%mod;
+}
+ll C(ll n,ll m)
+{
+	if(m>n||m<0||n<0) return 0;
+	return fac[n]*invfac[m]%mod*invfac[n-m]%mod;
+}
+ll A(ll n,ll m)
+{
+	if(m>n||m<0||n<0) return 0;
+	return fac[n]*invfac[n-m]%mod;
+}
 void go()
 {
-	int t,n,i,ans;
+	int t,n,i,pa,pb,a,b;
+	ll ans,tmp;
+	init(1000);
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
-		for(i=2;i<=n;i++)
+		read(n,pa,pb,a,b);
+		if(a>b)
 		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
+			pa=n-pa+1;
+			pb=n-pb+1;
+			swap(a,b);
+			swap(pa,pb);
 		}
-		for(i=n-1;i;i--)
+	//	debug(n,pa,pb,a,b)
+		if((a==1&&pa==1) && (b==n&&pb==n))
 		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
+			puts("0");
+			continue;
 		}
 		ans=0;
-		for(i=1;i<=n;i++)
+		if(b==n) ans=C(a-1,pa-1)*C(b-a-1,pb-pa-1)%mod;
+		else
 		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
+			for(i=pa+1;i<=pb-1;i++)
+			{
+				tmp=C(n-b-1,pb-i-1)*C(b-a-1,pb-pa-(n-b+1))%mod;
+				ans=(ans+tmp)%mod;
+			}
+			for(i=pb+1;i<=n;i++)
+			{
+				ans=(ans+C(b-a-1,pb-pa-1)*C(n-b-1,i-pb-1))%mod;
+			}
+	//		debug(ans)
+			ans=ans*C(a-1,pa-1)%mod;
 		}
-		printf("%d\n",ans);
+		if(a==pa&&b==pb) ans--;
+		if(ans<0) ans+=mod;
+		printf("%lld\n",ans);
 	}
 }
+/*
+1 3 x x
+8 x x x x x 20 x x 17 x x x
+x 2 x 4 x
+
+2
+5 2 4 2 4
+5 2 5 2 5
+*/
+

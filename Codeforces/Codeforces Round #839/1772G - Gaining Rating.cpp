@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,56 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=1e9+7;
+const double eps=1e-5;
+const int MAX=2e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
+ll a[MAX];
 void go()
 {
-	int t,n,i,ans;
+	int t,n,i;
+	ll x,y,ans,d,lp;
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
-		for(i=2;i<=n;i++)
-		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
-		}
-		for(i=n-1;i;i--)
-		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
-		}
+		read(n,x,y);
+		read(a,1,n);
+		sort(a+1,a+n+1);
 		ans=0;
-		for(i=1;i<=n;i++)
+		i=1;
+		while(x<y)
 		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
+			while(i<=n&&a[i]<=x&&x<y)
+			{
+				x++;
+				i++;
+				ans++;
+			}
+			if(x==y) break;
+			if(i>n)
+			{
+				ans+=y-x;
+				x=y;
+				break;
+			}
+			d=i-1-(n-i+1);
+			debug(x,ans,a[i],d)
+			if(d<=0)
+			{
+				ans=-1;
+				break;
+			}
+			ans-=i-1;
+			x-=i-1;
+			lp=min((a[i]-i+1-x+d-1)/d,(y-i+1-x+d-1)/d);
+			ans+=lp*n;
+			x+=lp*d;
+			ans+=i-1;
+			x+=i-1;
+			debug(ans,x)
 		}
-		printf("%d\n",ans);
+		if(ans!=-1&&x>y) ans-=x-y;
+		printf("%lld\n",ans);
 	}
 }
+

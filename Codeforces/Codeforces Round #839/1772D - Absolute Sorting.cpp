@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,38 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=1e9+7;
+const double eps=1e-5;
+const int MAX=2e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
+ll a[MAX];
 void go()
 {
-	int t,n,i,ans;
+	int t,n,i;
+	ll ans,l,r;
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
+		read(n);
+		read(a,1,n);
+		ans=0;
+		l=0;
+		r=INF;
 		for(i=2;i<=n;i++)
 		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
+			if(a[i]<a[i-1])
+			{
+				l=max(l,(a[i]+a[i-1]+1)/2);
+				r=min(r,a[i-1]);
+			}
 		}
-		for(i=n-1;i;i--)
+		ans=l;
+		for(i=1;i<=n;i++) a[i]=abs(a[i]-ans);
+		for(i=2;i<=n;i++)
 		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
+			if(a[i]<a[i-1]) ans=-1;
 		}
-		ans=0;
-		for(i=1;i<=n;i++)
-		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
-		}
-		printf("%d\n",ans);
+		printf("%lld\n",ans);
 	}
 }
+

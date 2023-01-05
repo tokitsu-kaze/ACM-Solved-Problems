@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,69 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=1e9+7;
+const double eps=1e-5;
+const int MAX=5e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
+int a[MAX];
 void go()
 {
-	int t,n,i,ans;
+	int t,n,i,cnta,cntb,com,f;
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
-		for(i=2;i<=n;i++)
+		read(n);
+		read(a,1,n);
+		cnta=cntb=0;
+		for(i=1;i<=n;i++) cnta+=(i!=a[i]);
+		for(i=1;i<=n;i++) cntb+=((n-i+1)!=a[i]);
+		com=0;
+		for(i=1;i<=n;i++) com+=(i!=a[i]&&(n-i+1)!=a[i]);
+		debug(cnta,cntb,com)
+		while(1)
 		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
+			if(cnta==0)
+			{
+				puts("First");
+				break;
+			}
+			f=1;
+			if(cnta>com)
+			{
+				cnta--;
+				f=0;
+			}
+			else if(cntb>1)
+			{
+				cnta--;
+				com--;
+				cntb--;
+				f=0;
+			}
+			
+			if(cntb==0)
+			{
+				puts("Second");
+				break;
+			}
+			if(cntb>com)
+			{
+				cntb--;
+				f=0;
+			}
+			else if(cnta>1)
+			{
+				cntb--;
+				com--;
+				cnta--;
+				f=0;
+			}
+			if(f)
+			{
+				puts("Tie");
+				break;
+			}
 		}
-		for(i=n-1;i;i--)
-		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
-		}
-		ans=0;
-		for(i=1;i<=n;i++)
-		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
-		}
-		printf("%d\n",ans);
 	}
 }
+

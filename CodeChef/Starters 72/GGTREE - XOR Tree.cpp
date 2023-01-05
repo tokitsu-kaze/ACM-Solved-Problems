@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,126 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
+const double eps=1e-5;
+const int MAX=5e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
+struct Trie
+{
+	#define type int
+	static const int mx=30;
+	int root,tot,nex[MAX*mx][2];
+	type cnt[MAX*mx];
+	int newnode()
+	{
+		mem(nex[tot],0);
+		cnt[tot]=0;
+		return tot++;
+	}
+	void init()
+	{
+		mem(nex[0],0);
+		cnt[0]=0;
+		tot=1;
+		root=newnode();
+	}
+	void upd(type x,type v)
+	{
+		int id,t,i;
+		id=root;
+		for(i=mx;~i;i--)
+		{
+			t=(x>>i)&1;
+			if(!nex[id][t]) nex[id][t]=newnode();
+			id=nex[id][t];
+			cnt[id]+=v;
+		}
+	}
+	type count(int x)
+	{
+		int id,t,i;
+		id=root;
+		for(i=mx;~i;i--)
+		{
+			t=(x>>i)&1;
+			if(!nex[id][t]) return 0;
+			id=nex[id][t];
+		}
+		return cnt[id];
+	}
+	type ask_max(type x)
+	{
+		int id,t,i;
+		type res;
+		id=root;
+		res=0;
+		for(i=mx;~i;i--)
+		{
+			t=(x>>i)&1;
+			if(nex[id][t^1]&&cnt[nex[id][t^1]]) t^=1;
+			res|=(t<<i);
+			id=nex[id][t];
+		}
+		return res;
+	}
+	#undef type
+}tr;
+ll pow2(ll a,ll b)
+{
+	ll res=1;
+	while(b)
+	{
+		if(b&1) res=res*a%mod;
+		a=a*a%mod;
+		b>>=1;
+	}
+	return res;
+}
+ll inv(ll x){return pow2(x,mod-2);}
+ll v[MAX],ans;
+VI mp[MAX];
+void dfs(int x,int fa,ll now,ll fm)
+{
+	int ch=0;
+	for(auto to:mp[x])
+	{
+		if(to==fa) continue;
+		ch++;
+	}
+	if(ch) fm=fm*ch%mod;
+	now^=v[x];
+	tr.upd(v[x],1);
+	for(auto to:mp[x])
+	{
+		if(to==fa) continue;
+		dfs(to,x,now,fm);
+	}
+	if(ch==0)
+	{
+		ans=(ans+(now^tr.ask_max(now))*inv(fm)%mod)%mod;
+	//	debug(x,now,now^tr.ask_max(now),fm)
+	}
+	now^=v[x];
+	tr.upd(v[x],-1);
+}
 void go()
 {
-	int t,n,i,ans;
+	int t,n,i,a,b;
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
-		for(i=2;i<=n;i++)
+		read(n);
+		read(v,1,n);
+		for(i=1;i<=n;i++) mp[i].clear();
+		for(i=1;i<n;i++)
 		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
-		}
-		for(i=n-1;i;i--)
-		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
+			read(a,b);
+			mp[a].pb(b);
+			mp[b].pb(a);
 		}
 		ans=0;
-		for(i=1;i<=n;i++)
-		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
-		}
-		printf("%d\n",ans);
+		tr.init();
+		dfs(1,0,0,1);
+		printf("%lld\n",ans);
 	}
 }

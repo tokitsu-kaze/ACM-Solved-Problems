@@ -98,7 +98,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+vector<string> VS;
 /************* define end  *************/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -118,44 +119,52 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-6;
-const int MAX=3e5+10;
+const double eps=1e-5;
+const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX][2],suf[MAX][2];
 void go()
 {
-	int t,n,i,ans;
+	int t,i,n,tot,pos;
+	ll k,s,ss,now,sd[105];
 	read(t);
 	while(t--)
 	{
-		read(s+1);
-		n=strlen(s+1);
-		
-		bit[0][0]=bit[0][1]=0;
-		suf[n+1][0]=suf[n+1][1]=0;
-		
-		bit[1][0]=bit[1][1]=0;
-		suf[n][0]=suf[n][1]=0;
-		
-		for(i=2;i<=n;i++)
+		read(n,k,s);
+		VI res(n,0);
+		sd[0]=now=1;
+		tot=0;
+		pos=0;
+		for(i=0;i<n;i++)
 		{
-			bit[i][0]=bit[i-1][0]+(s[i-1]=='0'&&s[i]=='1');
-			bit[i][1]=bit[i-1][1]+(s[i-1]=='1'&&s[i]=='0');
+			if(now<=s) pos=i;
+			if(now>4000000000000000000ll/k) break;
+			now=now*k;
+			sd[i+1]=now;
+			tot=i+1;
 		}
-		for(i=n-1;i;i--)
+		pos=min({pos+1,n-1,tot});
+		now=0;
+		for(i=0;i<=pos;i++)
 		{
-			suf[i][0]=suf[i+1][0]+(s[i]=='0'&&s[i+1]=='1');
-			suf[i][1]=suf[i+1][1]+(s[i]=='1'&&s[i+1]=='0');
+			res[i]=-1;
+			now-=sd[i];
 		}
-		ans=0;
-		for(i=1;i<=n;i++)
+		for(i=pos;~i;i--)
 		{
-			if(bit[i-1][0]+suf[i+1][0]+(s[i-1]=='0'&&s[i]=='0')+(s[i]=='1'&&s[i+1]=='1')==
-			   bit[i-1][1]+suf[i+1][1]+(s[i-1]=='1'&&s[i]=='1')+(s[i]=='0'&&s[i+1]=='0'))
-			ans++;
+			if(now+2*sd[i]<=s)
+			{
+				res[i]=1;
+				now+=2*sd[i];
+			}
+			else if(now+sd[i]<=s)
+			{
+				res[i]=0;
+				now+=sd[i];
+			}
 		}
-		printf("%d\n",ans);
+		if(now==s) println(res);
+		else puts("-2");
 	}
 }
+
