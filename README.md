@@ -2,7 +2,7 @@
 
 #### count of solved problems
 	Aizu                   7
-	AtCoder              122
+	AtCoder              155
 	bzoj                  24
 	Codeforces             -
 	CodeChef              61
@@ -10,8 +10,8 @@
 	fzu                   45
 	gym                  161
 	hdu                 1277
-	LeetCode             242
-	Luogu                 48
+	LeetCode             244
+	Luogu                 49
 	nbut                 100
 	NIT                  231
 	nowcoder             212
