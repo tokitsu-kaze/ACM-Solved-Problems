@@ -10,11 +10,11 @@
 	fzu                   45
 	gym                  161
 	hdu                 1277
-	LeetCode             255
-	Luogu                 53
+	LeetCode             266
+	Luogu                 56
 	nbut                 100
 	NIT                  231
-	nowcoder             212
+	nowcoder             224
 	Project Euler         29
 	poj                  198
 	sgu                   12
