@@ -8,6 +8,7 @@
 	CodeChef              79
 	CS Academy            73
 	fzu                   45
+	ecnuoj                 3
 	gym                  161
 	hdu                 1277
 	LeetCode             266
@@ -41,6 +42,8 @@ Codeforces：http://codeforces.com/
 
 CS Academy：https://csacademy.com/
 
+ecnu：https://acm.ecnu.edu.cn/problem/list/
+
 fzu：http://acm.fzu.edu.cn/
 
 gym：http://codeforces.com/gyms
@@ -65,4 +68,4 @@ sgu：http://codeforces.com/problemsets/acmsguru
 
 uoj：http://uoj.ac/
 
-zoj：http://acm.zju.edu.cn/onlinejudge/
+zoj：https://zoj.pintia.cn/problem-sets/91827364500/problems
