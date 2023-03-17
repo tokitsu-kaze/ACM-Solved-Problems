@@ -5,7 +5,7 @@
 	AtCoder              155
 	bzoj                  24
 	Codeforces             -
-	CodeChef              79
+	CodeChef             133
 	CS Academy            73
 	fzu                   45
 	ecnuoj                 3
