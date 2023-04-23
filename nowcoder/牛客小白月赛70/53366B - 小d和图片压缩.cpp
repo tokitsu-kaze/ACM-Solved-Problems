@@ -132,36 +132,29 @@ const double eps=1e-6;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+int mp[1005][1005];
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int n,m,i,j;
+	while(read(n,m))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
+			for(j=1;j<=m;j++)
 			{
-				now=s[i];
-				pos=i;
+				read(mp[i][j]);
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		VVI res;
+		for(i=1;i<=n;i+=2)
+		{
+			VI tmp;
+			for(j=1;j<=m;j+=2)
+			{
+				tmp.pb((mp[i][j]+mp[i+1][j]+mp[i][j+1]+mp[i+1][j+1])/4);
+			}
+			res.pb(tmp);
+		}
+		for(auto &it:res) println(it);
 	}
 }

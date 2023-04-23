@@ -129,39 +129,57 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
-const ll mod=1e9+7;
+const int MAX=1e7+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
-void go()
+//x is a prime if prime[x]==x(x>=2)
+int p[MAX],tot,prime[MAX];
+void init(int n)
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int i,j;
+	tot=0;
+	mem(prime,0);
+	prime[1]=1;
+	for(i=2;i<=n;i++)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		if(!prime[i]) prime[i]=p[tot++]=i;
+		for(j=0;j<tot&&p[j]*i<=n;j++)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			prime[i*p[j]]=p[j];
+			if(i%p[j]==0) break;
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
 	}
 }
+void go()
+{
+	int i;
+	ll a,b,d,tmp,ans;
+	init(MAX-10);
+	while(read(a,b))
+	{
+		if(__gcd(a,b)>1) puts("0");
+		else if(a%2==b%2) puts("1");
+		else
+		{
+			ans=LLINF;
+			d=abs(a-b);
+			for(i=0;i<tot;i++)
+			{
+				if(d%p[i]==0)
+				{
+					while(d%p[i]==0) d/=p[i];
+					tmp=(a/p[i]+1)*p[i]-a;
+					if(__gcd(a+tmp,b+tmp)>1) ans=min(ans,tmp);
+				}
+			}
+			if(d>1)
+			{
+				tmp=(a/d+1)*d-a;
+				if(__gcd(a+tmp,b+tmp)>1) ans=min(ans,tmp);
+			}
+			if(ans==LLINF) ans=-1;
+			printf("%lld\n",ans);
+		}
+	}
+}
+

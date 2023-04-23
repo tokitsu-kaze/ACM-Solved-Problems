@@ -45,6 +45,14 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
+	inline bool read_line(char *s){
+		char ch=nc();
+		for(;blank(ch);ch=nc());
+		if(IOerror)return false;
+		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
+		*s=0;
+		return true;
+	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
@@ -78,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -90,8 +97,19 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
 /************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -112,54 +130,16 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=998244353;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
-int bit[MAX],pre[MAX];
-const int limt=200;
-ll cal(ll x,int k)
-{
-	if(x<=0) return 0;
-	return x/k;
-}
 void go()
 {
-	int n,i,k,r,pos;
-	ll ans,now;
-	while(read(s+1))
+	string s;
+	cin>>s;
+	for(auto &it:s)
 	{
-		n=strlen(s+1);
-		bit[0]=0;
-		for(i=1;i<=n;i++) bit[i]=bit[i-1]+(s[i]=='1');
-		pos=0;
-		for(i=1;i<=n;i++)
-		{
-			if(s[i]=='1') pos=i;
-			pre[i]=pos;
-		}
-		ans=0;
-		unordered_map<int,int> mp;
-		for(k=1;k<=limt;k++)
-		{
-			now=0;
-			mp.clear();
-			mp[0]=1;
-			for(i=1;i<=n;i++)
-			{
-				now+=mp[i-k*bit[i]];
-				mp[i-k*bit[i]]++;
-			}
-			ans+=now;
-		}
-		for(k=1;k<=n/limt+1;k++)
-		{
-			for(i=1,r=1;i<=n;i++)
-			{
-				while(r<n&&bit[r+1]-bit[i-1]<=k) r++;
-				if(bit[r]-bit[i-1]==k) ans+=max(0ll,cal(r-i+1,k)-cal(max(pre[r]-i,(limt+1)*k-1),k));
-			}
-	//		debug(k,ans)
-		}
-		printf("%lld\n",ans);
+		if(it>='a'&&it<='z') it=it-'a'+'A';
+		else it=it-'A'+'a';
 	}
+	cout<<s<<"\n";
 }

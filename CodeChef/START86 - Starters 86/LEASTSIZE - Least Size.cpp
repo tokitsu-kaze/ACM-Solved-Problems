@@ -129,39 +129,101 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
+const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+struct Tree_Centroid
+{
+	VI centroid;
+	int sz[MAX],w[MAX],n;
+	void dfs(VI *mp,int x,int fa)
+	{
+		sz[x]=1;
+		w[x]=0;
+		for(int i=0;i<sz(mp[x]);i++)
+		{
+			int to=mp[x][i];
+			if(to==fa) continue;
+			dfs(mp,to,x);
+			sz[x]+=sz[to];
+			w[x]=max(w[x],sz[to]);
+		}
+		w[x]=max(w[x],n-sz[x]);
+		if(w[x]<=n/2) centroid.pb(x);
+	}
+	VI get_tree_centroid(int _n,VI *mp,int root)
+	{
+		n=_n;
+		centroid.clear();
+		dfs(mp,root,0);
+		return centroid;
+	}
+}trct;
+VI mp[MAX],res[MAX];
+int tot;
+void dfs(int x,int fa)
+{
+	res[tot].pb(x);
+	for(auto &to:mp[x])
+	{
+		if(to==fa) continue;
+		dfs(to,x);
+	}
+}
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,n,i,a,b,rt;
 	read(t);
 	while(t--)
 	{
 		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		for(i=1;i<=n;i++) mp[i].clear();
+		for(i=1;i<n;i++)
 		{
-			if(s[i]<now)
+			read(a,b);
+			mp[a].pb(b);
+			mp[b].pb(a);
+		}
+		VI tmp=trct.get_tree_centroid(n,mp,1);
+		rt=tmp[0];
+		tot=0;
+		for(auto &subtree:mp[rt])
+		{
+			tot++;
+			dfs(subtree,rt);
+		}
+		VI ans;
+		priority_queue<PII> q;
+		for(i=1;i<=tot;i++)
+		{
+			q.push({sz(res[i]),i});
+			debug(res[i])
+		}
+		while(!q.empty())
+		{
+			VPII now;
+			now.pb(q.top());
+			q.pop();
+			while(sz(q) && q.top().fi==now.back().fi)
 			{
-				now=s[i];
-				pos=i;
+				now.pb(q.top());
+				q.pop();
+			}
+			if(sz(now)==1 && sz(q))
+			{
+				now.pb(q.top());
+				q.pop();
+			}
+			for(auto &it:now)
+			{
+				ans.pb(res[it.se].back());
+				res[it.se].pop_back();
+				if(sz(res[it.se])) q.push({sz(res[it.se]),it.se});
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		ans.pb(rt);
+		printf("%d\n",rt);
+		println(ans);
+		
 	}
 }

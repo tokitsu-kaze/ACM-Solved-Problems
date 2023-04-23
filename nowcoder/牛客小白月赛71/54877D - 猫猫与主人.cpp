@@ -130,38 +130,36 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
+int a[MAX],b[MAX],c[MAX],d[MAX],idx[MAX],idy[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int n,m,i,j;
+	while(read(n,m))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		read(a,1,n);
+		read(c,1,n);
+		read(b,1,m);
+		read(d,1,m);
+		for(i=1;i<=n;i++) idx[i]=i;
+		for(i=1;i<=m;i++) idy[i]=i;
+		sort(idx+1,idx+1+n,[&](int x,int y){
+			return a[x]<a[y];
+		});
+		sort(idy+1,idy+1+m,[&](int x,int y){
+			return d[x]<d[y];
+		});
+		VI res(n);
+		set<int> s;
+		s.insert(0);
+		j=1;
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			while(j<=m && d[idy[j]]<=a[idx[i]]) s.insert(b[idy[j++]]);
+			if(*s.rbegin()<c[idx[i]]) res[idx[i]-1]=-1;
+			else res[idx[i]-1]=*s.rbegin();
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		println(res);
 	}
 }

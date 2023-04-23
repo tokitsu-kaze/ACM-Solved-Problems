@@ -129,39 +129,87 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
+const int MAX=1e6+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+//x is a prime if prime[x]==x(x>=2)
+int p[MAX],tot,prime[MAX];
+void init(int n)
+{
+	int i,j;
+	tot=0;
+	mem(prime,0);
+	prime[1]=1;
+	for(i=2;i<=n;i++)
+	{
+		if(!prime[i]) prime[i]=p[tot++]=i;
+		for(j=0;j<tot&&p[j]*i<=n;j++)
+		{
+			prime[i*p[j]]=p[j];
+			if(i%p[j]==0) break;
+		}
+	}
+}
+VI work(int x)
+{
+	VI res;
+	while(x>1)
+	{
+		int tmp=prime[x];
+		while(x%tmp==0) x/=tmp;
+		res.pb(tmp);
+	}
+	res.pb(1);
+	return res;
+}
+int a[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,n,i,x,g;
+	init(MAX-10);
 	read(t);
 	while(t--)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		read(n,x);
+		read(a,1,n);
+		sort(a+1,a+1+n);
+		g=0;
+		for(i=1;i<=n;i++) g=__gcd(g,a[i]);
+		if(a[1]==a[n])
 		{
-			if(s[i]<now)
+			puts("0");
+			continue;
+		}
+		if(g>1)
+		{
+			puts("1");
+			printf("%d\n",g);
+			continue;
+		}
+		set<int> s;
+		for(i=1;i<=n;i++)
+		{
+			VI res=work(a[i]);
+			for(auto &it:res) s.insert(it);
+		}
+		g=0;
+		for(i=0;i<tot;i++)
+		{
+			if(p[i]>x) break;
+			if(!s.count(p[i]))
 			{
-				now=s[i];
-				pos=i;
+				g=p[i];
+				break;
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		if(g)
+		{
+			puts("1");
+			printf("%d\n",g);
+			continue;
+		}
+		puts("2");
+		puts("2 3");
 	}
 }
+

@@ -129,39 +129,29 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
-const ll mod=1e9+7;
+const int MAX=1e4+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
 char s[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int i,n,ok;
+	while(read(s+1))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		n=strlen(s+1);
+		ok=0;
+		for(i=4;i<=n;i++)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			if(s[i-3]=='l' && s[i-2]=='o' && s[i-1]=='v' && s[i]=='e') ok=1;
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		for(i=3;i<=n;i++)
+		{
+			if(s[i-2]=='l' && s[i-1]=='o' && s[i]=='v') ok=1;
+			if(s[i-2]=='l' && s[i-1]=='o' && s[i]=='e') ok=1;
+			if(s[i-2]=='l' && s[i-1]=='v' && s[i]=='e') ok=1;
+			if(s[i-2]=='o' && s[i-1]=='v' && s[i]=='e') ok=1;
+		}
+		if(ok) puts("YES");
+		else puts("NO");
 	}
 }

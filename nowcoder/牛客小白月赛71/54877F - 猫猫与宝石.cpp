@@ -130,38 +130,38 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
+ll pow2(ll a,ll b)
+{
+	ll res=1;
+	while(b>0)
+	{
+		if(b&1) res=res*a%mod;
+		a=a*a%mod;
+		b>>=1;
+	}
+	return res;
+}
+ll inv(ll x){return pow2(x,mod-2);}
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int n,i,x;
+	ll ans,sum;
+	while(read(n))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		sum=0;
+		ans=0;
+		VL res;
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			read(x);
+			sum=(sum+x)%mod;
+			ans=sum*((i-1)*pow2(2,i-2)%mod+pow2(2,i-1))%mod;
+			ans=(ans+mod)%mod;
+			res.pb(ans*inv(pow2(2,i))%mod);
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		println(res);
 	}
 }
+

@@ -130,38 +130,58 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
+const int DIG=66+2;
+ll dp[DIG][2];
+ll gao(ll x,int pp,int flag)
+{
+	mem(dp,-1);
+	const int base=2;
+	int p[DIG],tot=0;
+	if(x==-1) return 0;
+	while(1)
+	{
+		p[tot++]=x%base;
+		x/=base;
+		if(!x) break;
+	}
+	function<ll(int,int,int,int)> dfs=[&](int pos,int lead,int sta,int limt)->ll
+	{
+		if(pos==-1) return !lead&&(sta^flag);
+		if(!limt&&!lead&&dp[pos][(sta^flag)]!=-1) return dp[pos][(sta^flag)];
+		ll res=0;
+		int nex_sta;
+		for(int i=(limt?p[pos]:base-1);~i;i--)
+		{
+			nex_sta=sta;
+			if(pos==pp) nex_sta=i;
+			res=(res+dfs(pos-1,lead&&i==0&&pos,nex_sta,limt&&i==p[pos]))%mod; 
+		}
+		if(!limt&&!lead) dp[pos][(sta^flag)]=res;
+		return res;
+	};
+	return (dfs(tot-1,1,0,1)-flag+mod)%mod;
+}
+
+ll cal(ll a,ll b)
+{
+	ll res=0,i;
+	for(i=0;i<60;i++)
+	{
+		res=(res+(1LL<<i)%mod*gao(a,i,0)%mod*gao(b,i,1))%mod;
+		res=(res+(1LL<<i)%mod*gao(a,i,1)%mod*gao(b,i,0))%mod;
+	}
+	return res;
+}
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t;
+	ll a,b;
 	read(t);
 	while(t--)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
-		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
-		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		read(a,b);
+		printf("%lld\n",cal(a,b));
 	}
 }

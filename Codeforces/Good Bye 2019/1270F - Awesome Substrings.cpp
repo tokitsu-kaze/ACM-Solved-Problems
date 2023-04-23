@@ -45,14 +45,6 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
-	inline bool read_line(char *s){
-		char ch=nc();
-		for(;blank(ch);ch=nc());
-		if(IOerror)return false;
-		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
-		*s=0;
-		return true;
-	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
@@ -86,9 +78,10 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) ((int)x.size())
+#define sz(x) (int)x.size()
 #define all(x) x.begin(),x.end()
-#define sqr(x) ((x)*(x))
+#define sqr(x) (x)*(x)
+using namespace __gnu_cxx;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -97,19 +90,8 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII> VPII;
-typedef vector<PLL> VPLL;
-typedef vector<string> VS;
-typedef vector<VI> VVI;
-typedef vector<VL> VVL;
-typedef vector<VS> VVS;
-typedef vector<VPII> VVPII;
+typedef vector<PII > VPII;
 /************* define end  *************/
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/hash_policy.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -130,38 +112,55 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 /*********************************  head  *********************************/
+const int limt=500;
 char s[MAX];
+int bit[MAX],pre[MAX],mp[MAX*(limt+1)+10];
+ll cal(ll x,int k)
+{
+	if(x<=0) return 0;
+	return x/k;
+}
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int n,i,k,r,pos;
+	ll ans,now;
+	while(read(s+1))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		n=strlen(s+1);
+		bit[0]=0;
+		for(i=1;i<=n;i++) bit[i]=bit[i-1]+(s[i]=='1');
+		pos=0;
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			if(s[i]=='1') pos=i;
+			pre[i]=pos;
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		ans=0;
+		mem(mp,0);
+		for(k=1;k<=limt;k++)
+		{
+			mp[k*n]=1;
+			now=0;
+			for(i=1;i<=n;i++)
+			{
+				now+=mp[i-k*bit[i]+k*n];
+				mp[i-k*bit[i]+k*n]++;
+			}
+			ans+=now;
+			for(i=1;i<=n;i++) mp[i-k*bit[i]+k*n]=0;
+			mp[k*n]=0;
+		}
+		for(k=1;k<=n/limt+1;k++)
+		{
+			for(i=1,r=1;i<=n;i++)
+			{
+				while(r<n&&bit[r+1]-bit[i-1]<=k) r++;
+				if(bit[r]-bit[i-1]==k) ans+=max(0ll,cal(r-i+1,k)-cal(max(pre[r]-i,(limt+1)*k-1),k));
+			}
+	//		debug(k,ans)
+		}
+		printf("%lld\n",ans);
 	}
 }

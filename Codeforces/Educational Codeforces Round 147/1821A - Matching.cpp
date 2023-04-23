@@ -132,36 +132,30 @@ const double eps=1e-6;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,i,cnt,ans,n;
+	char s[11];
 	read(t);
 	while(t--)
 	{
-		read(n);
 		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		n=strlen(s+1);
+		if(s[1]=='0')
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			puts("0");
+			continue;
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		cnt=0;
+		for(i=1;i<=n;i++) cnt+=(s[i]=='?');
+		if(cnt==0)
+		{
+			puts("1");
+			continue;
+		}
+		ans=1;
+		for(i=1;i<=cnt;i++) ans=ans*10;
+		if(s[1]=='?') ans=ans/10*9;
+		printf("%d\n",ans);
 	}
 }

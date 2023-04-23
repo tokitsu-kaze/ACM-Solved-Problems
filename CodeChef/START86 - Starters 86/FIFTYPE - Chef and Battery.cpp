@@ -129,39 +129,28 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
-const ll mod=1e9+7;
+const int MAX=1e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,n,ans;
 	read(t);
 	while(t--)
 	{
 		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		ans=0;
+		while(n>50)
 		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
+			n-=3;
+			ans++;
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		if(n&1)
+		{
+			n-=3;
+			ans++;
+		}
+		ans+=(50-n)/2;
+		printf("%d\n",ans);
 	}
 }

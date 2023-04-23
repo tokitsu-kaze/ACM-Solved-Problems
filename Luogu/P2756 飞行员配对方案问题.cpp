@@ -132,36 +132,89 @@ const double eps=1e-6;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
-void go()
+struct Bipartite_Matching
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	static const int N=105;
+	int n,m;
+	VI mp[N];
+	int link[N],s[N];
+	bool used[N],flag[N];
+	void init(int _n,int _m)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		n=_n;
+		m=_m;
+		for(int i=0;i<=n;i++) mp[i].clear();
+	}
+	void add_edge(int a,int b){mp[a].pb(b);}
+	bool dfs(int x)
+	{
+		int i,to;
+		flag[x]=1;
+		for(i=0;i<sz(mp[x]);i++)
 		{
-			if(s[i]<now)
+			to=mp[x][i];
+			if(used[to]) continue;
+			used[to]=1;
+			if(link[to]==-1||dfs(link[to]))
 			{
-				now=s[i];
-				pos=i;
+				link[to]=x;
+				s[x]=to;
+				return 1;
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		return 0;
+	}
+	int max_match()
+	{
+		int i,res;
+		mem(link,-1);
+		mem(s,-1);
+		res=0;
+		for(i=1;i<=n;i++)
+		{
+			if(!sz(mp[i])) continue;
+			mem(used,0);
+			if(dfs(i)) res++;
+		}
+		return res;
+	}
+	int min_cover(VI &x,VI &y)
+	{
+		int i,res;
+		res=max_match();
+		mem(flag,0);
+		mem(used,0);
+		x.clear();
+		y.clear();
+		for(i=1;i<=n;i++)
+		{
+			if(s[i]==-1) dfs(i);
+		}
+		for(i=1;i<=n;i++)
+		{
+			if(!flag[i]) x.pb(i);
+		}
+		for(i=1;i<=m;i++)
+		{
+			if(used[i]) y.pb(i);
+		}
+		return res;
+	}
+}bpm;
+void go()
+{
+	int n,m,i,a,b;
+	read(m,n);
+	bpm.init(m,n-m);
+	while(read(a,b))
+	{
+		if(a==-1&&b==-1) break;
+		bpm.add_edge(a,b);
+	}
+	printf("%d\n",bpm.max_match());
+	for(i=m+1;i<=n;i++)
+	{
+		if(bpm.link[i]!=-1) printf("%d %d\n",bpm.link[i],i);
 	}
 }
+

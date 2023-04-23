@@ -132,36 +132,33 @@ const double eps=1e-6;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+int l[MAX],r[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,n,k,i,now;
+	ll ans;
 	read(t);
 	while(t--)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		read(n,k);
+		read(l,1,n);
+		read(r,1,n);
+		multiset<int> s;
+		now=0;
+		ans=LLINF;
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
+			now+=r[i]-l[i]+1;
+			s.insert(r[i]-l[i]+1);
+			if(now>=k) ans=min(ans,max(l[i],r[i]-(now-k))+sz(s)*2ll);
+			while(sz(s) && now-*s.begin()>=k)
 			{
-				now=s[i];
-				pos=i;
+				now-=*s.begin();
+				s.erase(s.begin());
+				if(now>=k) ans=min(ans,max(l[i],r[i]-(now-k))+sz(s)*2ll);
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		if(ans==LLINF) ans=-1;
+		printf("%lld\n",ans);
 	}
 }

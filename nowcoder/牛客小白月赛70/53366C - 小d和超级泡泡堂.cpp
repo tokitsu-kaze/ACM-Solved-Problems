@@ -129,39 +129,60 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=2e5+10;
+const int MAX=1e6+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+char mp[1010][1010];
+int n,m,flag[1010][1010];
+int dir[4][2]={0,1,1,0,0,-1,-1,0};
+int ck(int x,int y)
+{
+	if(x<1||y<1||x>n||y>m) return 0;
+	if(mp[x][y]=='#') return 0;
+	return 1;
+}
+int bfs(int x,int y)
+{
+	queue<PII> q;
+	mem(flag,0);
+	q.push({x,y});
+	flag[x][y]=1;
+	int ans=0;
+	while(!q.empty())
+	{
+		auto t=q.front();
+		q.pop();
+		for(int i=0;i<4;i++)
+		{
+			auto nex=t;
+			nex.fi+=dir[i][0];
+			nex.se+=dir[i][1];
+			if(!ck(nex.fi,nex.se)) continue;
+			if(flag[nex.fi][nex.se]) continue;
+			if(mp[nex.fi][nex.se]=='!') ans++;
+			flag[nex.fi][nex.se]=1;
+			q.push(nex);
+		}
+	}
+	return ans;
+}
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
-	while(t--)
+	int i,j,sx,sy;
+	while(read(n,m))
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		for(i=1;i<=n;i++)
 		{
-			if(s[i]<now)
+			read(mp[i]+1);
+			for(j=1;j<=m;j++)
 			{
-				now=s[i];
-				pos=i;
+				if(mp[i][j]=='@')
+				{
+					sx=i;
+					sy=j;
+				}
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		printf("%d\n",bfs(sx,sy));
 	}
 }

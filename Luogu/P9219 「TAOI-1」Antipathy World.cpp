@@ -121,7 +121,7 @@ void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"
 void go();
 int main(){
 	#ifdef tokitsukaze
-		freopen("TEST.txt","r",stdin);
+//		freopen("TEST.txt","r",stdin);
 	#endif
 	go();return 0;
 }
@@ -130,38 +130,60 @@ const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char s[MAX];
+int ask(int x,int y)
+{
+	int res;
+	cout<<"? "<<x<<" "<<y<<endl;
+	cin>>res;
+	return res;
+}
 void go()
 {
-	int t,n,i,pos;
-	char now;
-	read(t);
+	int t,n,k,pos,i,mx,a,b,res,ra,rb;
+	cin>>t;
 	while(t--)
 	{
-		read(n);
-		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		cin>>n>>k;
+		mx=0;
+		for(i=1;i+1<=n;i+=2)
 		{
-			if(s[i]<now)
+			res=ask(i,i+1);
+			if(res>mx)
 			{
-				now=s[i];
-				pos=i;
+				mx=res;
+				a=i;
+				b=i+1;
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		if(n&1)
+		{
+			ra=ask(n,a);
+			rb=ask(n,b);
+			if(ra>rb && mx>rb)
+			{
+				cout<<"! "<<a<<endl;
+			}
+			else if(rb>ra && mx>ra)
+			{
+				cout<<"! "<<b<<endl;
+			}
+			else cout<<"! "<<n<<endl;
+			continue;
+		}
+		for(i=1;i<=n;i++)
+		{
+			if(i==a || i==b) continue;
+			if(ask(i,a)>ask(i,b))
+			{
+				cout<<"! "<<a<<endl;
+			}
+			else
+			{
+				cout<<"! "<<b<<endl;
+			}
+			break;
+		}
 	}
 }

@@ -132,36 +132,72 @@ const double eps=1e-6;
 const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-char s[MAX];
+char s[MAX],tmp[MAX];
+int st[MAX],top,match[MAX],v[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,k,i,n,mx,pos,now;
+	ll ans;
 	read(t);
 	while(t--)
 	{
-		read(n);
+		read(k);
 		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
+		n=strlen(s+1);
+		while(k--)
 		{
-			if(s[i]<now)
+			if(n==0) break;
+			top=0;
+			now=0;
+			for(i=n;i;i--) v[i]=0;
+			for(i=n;i;i--)
 			{
-				now=s[i];
-				pos=i;
+				if(s[i]==')')
+				{
+					st[top++]=i;
+					v[i]=-now;
+				}
+				else
+				{
+					top--;
+					v[st[top]]+=now;
+					match[st[top]]=i;
+					now++;
+				}
+			}
+			mx=0;
+			pos=n;
+			for(i=1;i<=n;i++)
+			{
+	//			debug(i,v[i])
+				if(v[i]>mx)
+				{
+					mx=v[i];
+					pos=i;
+				}
+			}
+			top=0;
+			for(i=1;i<=n;i++)
+			{
+				if(i==pos || i==match[pos]) continue;
+				tmp[++top]=s[i];
+			}
+			n=top;
+			for(i=1;i<=n;i++) s[i]=tmp[i];
+			s[n+1]='\0';
+	//		debug(s+1)
+		}
+		top=0;
+		ans=0;
+		for(i=n;i;i--)
+		{
+			if(s[i]==')') st[top++]=i;
+			else
+			{
+				top--;
+				ans+=top;
 			}
 		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		printf("%lld\n",ans);
 	}
 }

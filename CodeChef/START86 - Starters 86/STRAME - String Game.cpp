@@ -135,33 +135,15 @@ const ll mod=1e9+7;
 char s[MAX];
 void go()
 {
-	int t,n,i,pos;
-	char now;
+	int t,n,i,cnt[2];
 	read(t);
 	while(t--)
 	{
 		read(n);
 		read(s+1);
-		now='z'+1;
-		for(i=n;i>1;i--)
-		{
-			if(s[i]<now)
-			{
-				now=s[i];
-				pos=i;
-			}
-		}
-		string res;
-        if(now<=s[1])
-        {
-            res+=now;
-            for(i=1;i<=n;i++)
-            {
-                if(i==pos) continue;
-                res+=s[i];
-            }
-        }
-		if(sz(res)) puts(res.c_str());
-		else puts(s+1);
+		mem(cnt,0);
+		for(i=1;i<=n;i++) cnt[s[i]-'0']++;
+		if(min(cnt[0],cnt[1])&1) puts("Zlatan");
+		else puts("Ramos");
 	}
 }
