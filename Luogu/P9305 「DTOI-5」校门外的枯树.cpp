@@ -86,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -98,9 +97,19 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
 typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
 /************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -109,7 +118,6 @@ void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-
 void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
 void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
 /*************** IO end  ***************/
-void assert_lr(ll x,ll l,ll r) {assert(x>=l&&x<=r);};
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -121,74 +129,89 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e5+10;
-const ll mod=1e9+7;
+const int MAX=3e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-struct Dijkstra
+VI mp[MAX];
+set<int> res[MAX];
+int v[MAX];
+int ans[MAX],sum[MAX];
+void dfs_v(int x)
 {
-	#define type int
-	#define inf INF
-	struct node
+	for(auto &to:mp[x])
 	{
-		int id;
-		type v;
-		friend bool operator <(node a,node b){return a.v>b.v;}
-	};
-	static const int N=MAX;
-	vector<node> mp[N];
-	type dis[N];
-	int n,vis[N];
-	void init(int _n)
-	{
-		n=_n;
-		for(int i=0;i<=n;i++) mp[i].clear();
+		dfs_v(to);
+		v[x]+=v[to];
 	}
-	void add_edge(int x,int y,type v){ mp[x].pb({y,v});}
-	void work(int s)
+}
+void dfs(int x)
+{
+	int i,bit,suf,to;
+	ans[x]=INF;
+	sum[x]=0;
+	res[x].clear();
+	bit=suf=0;
+	for(i=0;i<sz(mp[x]);i++) suf+=v[mp[x][i]];
+	for(i=0;i<sz(mp[x]);i++)
 	{
-		int i,to;
-		type w;
-		priority_queue<node> q;
-		for(i=0;i<=n;i++)
+		to=mp[x][i];
+		dfs(to);
+		suf-=v[to];
+		if(!sz(res[to])) ans[x]=min(ans[x],abs(bit-suf));
+		else
 		{
-			dis[i]=inf;
-			vis[i]=0;
-		}
-		dis[s]=0;
-		q.push({s,type(0)});
-		while(!q.empty())
-		{
-			node t=q.top();
-			q.pop();
-			if(vis[t.id]) continue;
-			vis[t.id]=1;// this node has already been extended
-			for(auto &it:mp[t.id])
+			auto it=res[to].lower_bound(bit-suf-sum[to]);
+			if(it!=res[to].end()) ans[x]=min(ans[x],abs((*it+sum[to])-(bit-suf)));
+			if(it!=res[to].begin())
 			{
-				to=it.id;
-				w=it.v;
-				if(dis[to]>dis[t.id]+w)
-				{
-					dis[to]=dis[t.id]+w;
-					if(!vis[to]) q.push({to,dis[to]}); 
-				}
+				--it;
+				ans[x]=min(ans[x],abs((*it+sum[to])-(bit-suf)));
 			}
 		}
+		if(sz(res[to])==0)
+		{
+			res[x].insert(suf-bit-sum[x]);
+		}
+		else
+		{
+			if(sz(res[to])<sz(res[x]))
+			{
+				for(auto &it:res[to]) res[x].insert(it+(suf-bit+sum[to]-sum[x]));
+			}
+			else
+			{
+				for(auto &it:res[x]) res[to].insert(it-(suf-bit+sum[to])+sum[x]);
+				swap(res[x],res[to]);
+				sum[x]=(suf-bit+sum[to]);
+			}
+		}
+		bit+=v[to];
 	}
-	#undef type
-	#undef inf
-}dij;
+//	debug(x,sum[x])
+//	for(auto &it:res[x]) debug(it)
+	if(ans[x]==INF) ans[x]=0;
+}
 void go()
 {
-	int n,m,s,i,a,b,c;
-	while(read(n,m,s))
+	int T,k,n,m,i,a,b;
+	read(T,k);
+	while(T--)
 	{
-		dij.init(n);
-		while(m--)
+		read(n);
+		for(i=1;i<=n;i++)
 		{
-			read(a,b,c);
-			dij.add_edge(a,b,c);
+			mp[i].clear();
+			read(m);
+			while(m--)
+			{
+				read(a,b);
+				mp[i].pb(a);
+				v[a]=b;
+			}
 		}
-		dij.work(s);
-		println(dij.dis,1,n);
+		dfs_v(1);
+		dfs(1);
+		if(k==1) printf("%d\n",ans[1]);
+		else println(ans,1,n);
 	}
 }

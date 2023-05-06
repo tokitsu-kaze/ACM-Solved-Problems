@@ -124,71 +124,159 @@ const double eps=1e-6;
 const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-struct Dijkstra
+struct MCMF_dij
 {
 	#define type int
 	#define inf INF
+	#define PTI pair<type,int>
+	static const int N=2020;
 	struct node
 	{
-		int id;
-		type v;
-		friend bool operator <(node a,node b){return a.v>b.v;}
+		int from,to;
+		type flow,cost;
+		node(){}
+		node(int u,int v,type f,type co):from(u),to(v),flow(f),cost(co){}
 	};
-	static const int N=MAX;
-	vector<node> mp[N];
-	type dis[N];
-	int n,vis[N];
+	int n,s,t,id[N],vis[N];
+	vector<node> edge;
+	vector<int> mp[N];
+	type dis[N],h[N];
 	void init(int _n)
 	{
 		n=_n;
 		for(int i=0;i<=n;i++) mp[i].clear();
+		edge.clear();
 	}
-	void add_edge(int x,int y,type v){ mp[x].pb({y,v});}
-	void work(int s)
+	void add_edge(int from,int to,type cap,type cost=0)
+	{
+		edge.pb(node(from,to,cap,cost));
+		edge.pb(node(to,from,0,-cost));
+		int m=edge.size();
+		mp[from].pb(m-2);
+		mp[to].pb(m-1);
+	}
+	void spfa()
+	{
+		int i,x,to;
+		for(i=0;i<=n;i++)
+		{
+			h[i]=inf;
+			vis[i]=0;
+		}
+		queue<int> q;
+		q.push(s);
+		h[s]=0;
+		vis[s]=1;
+		while(!q.empty())
+		{
+			x=q.front();
+			q.pop();
+			vis[x]=0;
+			for(i=0;i<sz(mp[x]);i++)
+			{
+				node &e=edge[mp[x][i]];
+				to=e.to;
+				if(e.flow>0&&h[to]>h[x]+e.cost)
+				{ 
+					h[to]=h[x]+e.cost;
+					if(!vis[to])
+					{
+						vis[to]=1;
+						q.push(to);
+					}
+				}
+			}
+		}
+	}
+	bool dij()
 	{
 		int i,to;
-		type w;
-		priority_queue<node> q;
 		for(i=0;i<=n;i++)
 		{
 			dis[i]=inf;
 			vis[i]=0;
 		}
 		dis[s]=0;
-		q.push({s,type(0)});
+		id[s]=0;
+		priority_queue<PTI ,vector<PTI>,greater<PTI> > q;
+		q.push(MP(type(0),s));
 		while(!q.empty())
 		{
-			node t=q.top();
+			PTI x=q.top();
 			q.pop();
-			if(vis[t.id]) continue;
-			vis[t.id]=1;// this node has already been extended
-			for(auto &it:mp[t.id])
+			if(vis[x.se]) continue;
+			vis[x.se]=1;
+			for(i=0;i<sz(mp[x.se]);i++)
 			{
-				to=it.id;
-				w=it.v;
-				if(dis[to]>dis[t.id]+w)
-				{
-					dis[to]=dis[t.id]+w;
-					if(!vis[to]) q.push({to,dis[to]}); 
+				node& e=edge[mp[x.se][i]];
+				to=e.to;
+				type now_cost=e.cost+h[x.se]-h[to];
+				if(e.flow>0&&dis[to]>dis[x.se]+now_cost)
+				{ 
+					dis[to]=dis[x.se]+now_cost;
+					e.from=x.se;
+					id[to]=mp[x.se][i];
+					if(!vis[to]) q.push(MP(dis[to],to));
 				}
 			}
 		}
+		return dis[t]!=inf;
+	}
+	pair<type,type> mincost_maxflow(int _s,int _t)
+	{
+		int i;
+		type flow=0,cost=0;
+		s=_s;
+		t=_t;
+		spfa();
+		while(dij())
+		{
+			for(i=0;i<=n;i++) h[i]+=dis[i];
+			type new_flow=inf;
+			for(i=t;i!=s;i=edge[id[i]].from)
+			{
+				new_flow=min(new_flow,edge[id[i]].flow);
+			}
+			for(i=t;i!=s;i=edge[id[i]].from)
+			{
+				edge[id[i]].flow-=new_flow;
+				edge[id[i]^1].flow+=new_flow;
+			}
+			flow+=new_flow;
+			cost+=new_flow*h[t];
+		}
+		return MP(cost,flow);
 	}
 	#undef type
 	#undef inf
-}dij;
+	#undef PTI
+}mcmf; // upper: O(nm + max_flow*mlogm)
 void go()
 {
-	int n,m,s,i,a,b,c;
-	while(read(n,m,s))
+	int a,b,i,j,sq,s,t;
+	while(~scanf("%d%d",&a,&b))
 	{
-		dij.init(n);
-		while(m--)
+		s=2002;
+		t=s+1;
+		mcmf.init(t);
+		for(i=a;i<=b;i++)
 		{
-			read(a,b,c);
-			dij.add_edge(a,b,c);
+			for(j=i+1;j<=b;j++)
+			{
+				sq=(int)sqrt(j*j-i*i+0.5);
+				if(j*j-i*i==sq*sq&&__gcd(i,sq)==1)
+				{
+					mcmf.add_edge(i,j+1000,1,-(i+j));
+					mcmf.add_edge(j,i+1000,1,-(i+j));
+				}
+			}
 		}
-		dij.work(s);
-		println(dij.dis,1,n);
+		for(i=a;i<=b;i++)
+		{
+			mcmf.add_edge(s,i,1,0);
+			mcmf.add_edge(i+1000,t,1,0);
+		}
+		PII res=mcmf.mincost_maxflow(s,t);
+		printf("%d %d\n",res.se/2,-res.fi/2);
 	}
 }

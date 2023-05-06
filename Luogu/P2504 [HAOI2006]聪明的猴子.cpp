@@ -121,74 +121,74 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e5+10;
+const int MAX=1e6+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-struct Dijkstra
+struct node
 {
-	#define type int
-	#define inf INF
-	struct node
+	int id;
+	int v;
+	node(){}
+	node(int a,int b) :id(a),v(b){}
+	friend bool operator <(node a,node b){return a.v>b.v;}
+};
+vector<node> mp[MAX];
+bool flag[MAX];
+int dis[MAX];
+int prim()
+{
+	int res=-INF;
+	node t,to;
+	priority_queue<node> q;
+	mem(dis,0x3f);
+	mem(flag,0);
+	dis[1]=0;
+	q.push(node(1,dis[1]));
+	while(!q.empty())
 	{
-		int id;
-		type v;
-		friend bool operator <(node a,node b){return a.v>b.v;}
-	};
-	static const int N=MAX;
-	vector<node> mp[N];
-	type dis[N];
-	int n,vis[N];
-	void init(int _n)
-	{
-		n=_n;
-		for(int i=0;i<=n;i++) mp[i].clear();
-	}
-	void add_edge(int x,int y,type v){ mp[x].pb({y,v});}
-	void work(int s)
-	{
-		int i,to;
-		type w;
-		priority_queue<node> q;
-		for(i=0;i<=n;i++)
+		t=q.top();
+		q.pop();
+		if(flag[t.id]) continue;
+		flag[t.id]=1;
+		res=max(res,dis[t.id]);
+		for(int i=0;i<sz(mp[t.id]);i++)
 		{
-			dis[i]=inf;
-			vis[i]=0;
-		}
-		dis[s]=0;
-		q.push({s,type(0)});
-		while(!q.empty())
-		{
-			node t=q.top();
-			q.pop();
-			if(vis[t.id]) continue;
-			vis[t.id]=1;// this node has already been extended
-			for(auto &it:mp[t.id])
+			to=mp[t.id][i];
+			if(!flag[to.id]&&dis[to.id]>to.v)
 			{
-				to=it.id;
-				w=it.v;
-				if(dis[to]>dis[t.id]+w)
-				{
-					dis[to]=dis[t.id]+w;
-					if(!vis[to]) q.push({to,dis[to]}); 
-				}
+				dis[to.id]=to.v;
+				q.push(node(to.id,dis[to.id]));
 			}
 		}
 	}
-	#undef type
-	#undef inf
-}dij;
+	return res;
+}
+int x[1111],y[1111];
+int dist(int a,int b){return sqr(x[a]-x[b])+sqr(y[a]-y[b]);}
 void go()
 {
-	int n,m,s,i,a,b,c;
-	while(read(n,m,s))
+	int n,i,j,m,a[555],ans,limt;
+	scanf("%d",&n);
+	for(i=1;i<=n;i++) scanf("%d",&a[i]);
+	scanf("%d",&m);
+	for(i=1;i<=m;i++)
 	{
-		dij.init(n);
-		while(m--)
-		{
-			read(a,b,c);
-			dij.add_edge(a,b,c);
-		}
-		dij.work(s);
-		println(dij.dis,1,n);
+		scanf("%d%d",&x[i],&y[i]);
+		mp[i].clear();
 	}
+	for(i=1;i<=m;i++)
+	{
+		for(j=i+1;j<=m;j++)
+		{
+			mp[i].pb(node(j,dist(i,j)));
+			mp[j].pb(node(i,dist(i,j)));
+		}
+	}
+	limt=prim();
+	ans=0;
+	for(i=1;i<=n;i++)
+	{
+		if(a[i]*a[i]>=limt) ans++;
+	}
+	printf("%d\n",ans);
 }
