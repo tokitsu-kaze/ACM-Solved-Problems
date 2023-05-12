@@ -129,34 +129,38 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
+ll dp[MAX][66];
 int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,n,k,i,j;
+	ll ans;
+	read(t);
+	while(t--)
 	{
+		read(n,k);
 		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		for(i=0;i<=n;i++) mem(dp[i],0);
+		for(i=1;i<=n;i++)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
+			for(j=0;j<=63;j++)
 			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
+				dp[i][j]=dp[i-1][j];
 			}
-			if(now<ans)
+			dp[i][a[i]]=(dp[i][a[i]]+1)%mod;
+			for(j=0;j<=63;j++)
 			{
-				ans=now;
-				x=i;
+				dp[i][j&a[i]]=(dp[i][j&a[i]]+dp[i-1][j])%mod;
 			}
 		}
-		printf("%d\n",x);
-		printf("%d\n",ans);
+		ans=0;
+		for(i=0;i<=63;i++)
+		{
+			if(__builtin_popcount(i)==k) ans=(ans+dp[n][i])%mod;
+		}
+		printf("%lld\n",ans);
 	}
 }

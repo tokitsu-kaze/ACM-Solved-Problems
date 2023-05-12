@@ -129,34 +129,18 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=4e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,a[6];
+	read(t);
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
-		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
-		}
-		printf("%d\n",x);
-		printf("%d\n",ans);
+		read(a,1,4);
+		sort(a+1,a+1+4);
+		if(a[1]+a[2]+a[3]<a[4]) puts("YES");
+		else puts("NO");
 	}
 }

@@ -129,34 +129,42 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=1e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
+int a[MAX],b[MAX],n,m,k;
+ll sa,sb;
+int ck(int x)
+{
+	int i;
+	for(i=0;i<=x;i++)
+	{
+		if((sa+1ll*k*i)*(m+x-i)>(sb+1ll*(x-i))*(n+i)) return 1;
+	}
+	return 0;
+}
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,i,l,r,mid;
+	read(t);
+	while(t--)
 	{
+		read(n,m,k);
 		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		read(b,1,m);
+		sa=sb=0;
+		for(i=1;i<=n;i++) sa+=a[i];
+		for(i=1;i<=m;i++) sb+=b[i];
+		l=0;
+		r=1e6;
+		while(l<r)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
+			mid=(l+r)>>1;
+			if(ck(mid)) r=mid;
+			else l=mid+1;
 		}
-		printf("%d\n",x);
-		printf("%d\n",ans);
+		if(ck(l)) printf("%d\n",l);
+		else puts("-1");
 	}
 }
+

@@ -129,34 +129,20 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,ans,i;
+	string tmp="codeforces";
+	string s;
+	cin>>t;
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
-		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
-		}
-		printf("%d\n",x);
+		cin>>s;
+		ans=0;
+		for(i=0;i<sz(s);i++) ans+=(s[i]!=tmp[i]);
 		printf("%d\n",ans);
 	}
 }

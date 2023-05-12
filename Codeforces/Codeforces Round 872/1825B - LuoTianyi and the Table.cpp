@@ -129,34 +129,33 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
 int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,n,m,i;
+	ll ans,now;
+	read(t);
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
-		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
-		}
-		printf("%d\n",x);
-		printf("%d\n",ans);
+		read(n,m);
+		read(a,1,n*m);
+		sort(a+1,a+1+n*m);
+		ans=0;
+		now=0;
+		now+=1ll*(a[n*m]-a[1])*(max(n,m)-1);
+		now+=1ll*(a[n*m]-a[2])*(min(n,m)-1);
+		now+=1ll*(a[n*m]-a[1])*(n-1)*(m-1);
+		ans=max(ans,now);
+		now=0;
+		now+=1ll*(a[n*m]-a[1])*(max(n,m)-1);
+		now+=1ll*(a[n*m-1]-a[1])*(min(n,m)-1);
+		now+=1ll*(a[n*m]-a[1])*(n-1)*(m-1);
+		ans=max(ans,now);
+		printf("%lld\n",ans);
 	}
 }
+
+

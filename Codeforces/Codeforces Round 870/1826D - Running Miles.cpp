@@ -129,34 +129,110 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
+struct Segment_Tree
+{
+	#define type int
+	#define ls (id<<1)
+	#define rs (id<<1|1)
+	int n,ql,qr;
+	type a[MAX],v[MAX<<2],tag[MAX<<2],qv;
+	void pushup(int id)
+	{
+		v[id]=max(v[ls],v[rs]);
+	}
+	void pushdown(int l,int r,int id)
+	{
+		if(!tag[id]) return;
+		int mid=(l+r)>>1;
+		v[ls]+=tag[id];
+		v[rs]+=tag[id];
+		tag[ls]+=tag[id];
+		tag[rs]+=tag[id];
+		tag[id]=0;
+	}
+	void build(int l,int r,int id)
+	{
+		tag[id]=0;
+		v[id]=-INF;
+		if(l==r)
+		{
+			v[id]=a[l];
+			return;
+		}
+		int mid=(l+r)>>1;
+		build(l,mid,ls);
+		build(mid+1,r,rs);
+		pushup(id);
+	}
+	void update(int l,int r,int id)
+	{
+		if(l>=ql&&r<=qr)
+		{
+			v[id]+=qv;
+			tag[id]+=qv;
+			return;
+		}
+		pushdown(l,r,id);
+		int mid=(l+r)>>1;
+		if(ql<=mid) update(l,mid,ls);
+		if(qr>mid) update(mid+1,r,rs);
+		pushup(id);
+	}
+	type res;
+	void query(int l,int r,int id)
+	{
+		if(l>=ql&&r<=qr)
+		{
+			res=max(res,v[id]);
+			return;
+		}
+		pushdown(l,r,id);
+		int mid=(l+r)>>1;
+		if(ql<=mid) query(l,mid,ls);
+		if(qr>mid) query(mid+1,r,rs);
+	}
+	void build(int _n){n=_n;build(1,n,1);}
+	void upd(int l,int r,type v)
+	{
+		ql=l;
+		qr=r;
+		qv=v;
+		update(1,n,1);
+	}
+	type ask(int l,int r)//init res
+	{
+		ql=l;
+		qr=r;
+		res=-INF;
+		query(1,n,1);
+		return res;
+	}
+	#undef type
+	#undef ls
+	#undef rs
+}tr;
 int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,n,i,ans;
+	read(t);
+	while(t--)
 	{
+		read(n);
 		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		for(i=1;i<=n;i++) tr.a[i]=a[i]-(i-1);
+		tr.build(n);
+		ans=-INF;
+		for(i=2;i<=n-1;i++)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
+			tr.upd(i,n,1);
+			tr.upd(1,i-1,-1);
+			ans=max(ans,tr.ask(1,i-1)+tr.ask(i+1,n)+a[i]);
 		}
-		printf("%d\n",x);
 		printf("%d\n",ans);
 	}
 }
+

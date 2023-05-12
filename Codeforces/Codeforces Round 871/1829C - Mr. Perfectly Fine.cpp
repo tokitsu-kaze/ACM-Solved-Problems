@@ -129,34 +129,28 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,n,i,x,ans;
+	char s[11];
+	read(t);
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		read(n);
+		map<string,int> mp;
+		for(i=1;i<=n;i++)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
-			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
+			read(x,s);
+			if(mp.count(s)) mp[s]=min(mp[s],x);
+			else mp[s]=x;
 		}
-		printf("%d\n",x);
+		ans=INF;
+		if(mp.count("11")) ans=min(ans,mp["11"]);
+		if(mp.count("10") && mp.count("01")) ans=min(ans,mp["10"]+mp["01"]);
+		if(ans==INF) ans=-1;
 		printf("%d\n",ans);
 	}
 }

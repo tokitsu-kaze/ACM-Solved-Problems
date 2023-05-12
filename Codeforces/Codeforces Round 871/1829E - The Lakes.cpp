@@ -129,34 +129,55 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
+struct node{int x,y;};
+int mp[1005][1005];
+int n,m,dir[4][2]={0,1,1,0,0,-1,-1,0};
+int bfs(int x,int y)
+{
+	int i,j,res=0;
+	node now,nex;
+	queue<node> q;
+	q.push({x,y});
+	res+=mp[x][y];
+	mp[x][y]=0;
+	while(!q.empty())
+	{
+		now=q.front();
+		q.pop();
+		for(i=0;i<4;i++)
+		{
+			nex=now;
+			nex.x+=dir[i][0];
+			nex.y+=dir[i][1];
+			if(nex.x<0 || nex.x>=n || nex.y<0 ||nex.y>=m) continue;
+			if(!mp[nex.x][nex.y]) continue;
+			res+=mp[nex.x][nex.y];
+			mp[nex.x][nex.y]=0;
+			q.push(nex);
+		}
+	}
+	return res;
+}
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,i,j,ans;
+	read(t);
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		read(n,m);
+		for(i=0;i<n;i++) read(mp[i],0,m-1);
+		ans=0;
+		for(i=0;i<n;i++)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
+			for(j=0;j<m;j++)
 			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
-			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
+				if(mp[i][j]==0) continue;
+				ans=max(ans,bfs(i,j));
 			}
 		}
-		printf("%d\n",x);
 		printf("%d\n",ans);
 	}
 }

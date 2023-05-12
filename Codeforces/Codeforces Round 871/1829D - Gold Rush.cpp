@@ -129,34 +129,40 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=3e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int a[MAX];
 void go()
 {
-	int n,i,j,k,ans,x,now;
-	while(read(n))
+	int t,n,m,ok,f;
+	read(t);
+	while(t--)
 	{
-		read(a,1,n);
-		x=1;
-		ans=2*n;
-		for(i=2;i<ans;i++)
+		read(n,m);
+		VI res;
+		res.pb(n);
+		ok=0;
+		while(1)
 		{
-			now=0;
-			for(j=(a[1]+i)/i*i,k=1;k<=n;j=(a[k]+i)/i*i)
+			f=0;
+			VI tmp;
+			for(auto &it:res)
 			{
-				k=lower_bound(a+k,a+1+n,j)-a;
-				now+=i+1;
-				if(now>=ans) break;
+				if(it==m) ok=1;
+				if(it%3) continue;
+				f=1;
+				tmp.pb(it/3);
+				tmp.pb(it/3*2);
 			}
-			if(now<ans)
-			{
-				ans=now;
-				x=i;
-			}
+			if(!f) break;
+			if(ok) break;
+			res=tmp;
 		}
-		printf("%d\n",x);
-		printf("%d\n",ans);
+		for(auto &it:res)
+		{
+			if(it==m) ok=1;
+		}
+		if(ok) puts("YES");
+		else puts("NO");
 	}
 }
