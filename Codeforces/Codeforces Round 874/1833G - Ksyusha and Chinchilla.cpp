@@ -86,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -98,8 +97,19 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
 /************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -108,7 +118,6 @@ void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-
 void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
 void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
 /*************** IO end  ***************/
-void assert_lr(ll x,ll l,ll r) {assert(x>=l&&x<=r);};
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -120,178 +129,154 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=5e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-namespace NTT
+struct node{int x,id;};
+vector<node> mp[MAX];
+set<int> s[MAX];
+int fa[MAX],d[MAX],mx,h[MAX],flag[MAX];
+void dfs(int x,int pre,int dep)
 {
-	const int g=3;
-	const int p=998244353;
-	int wn[35];
-	int pow2(int a,int b)
+	s[dep].insert(x);
+	fa[x]=pre;
+	h[x]=dep;
+	mx=max(mx,dep);
+	for(auto &to:mp[x])
 	{
-		int res=1;
-		while(b>0)
-		{
-			if(b&1) res=1ll*res*a%p;
-			a=1ll*a*a%p;
-			b>>=1;
-		}
-		return res;
+		if(to.x==pre) continue;
+		dfs(to.x,x,dep+1);
 	}
-	void getwn()
-	{
-		assert(p==mod);
-		for(int i=0;i<25;i++) wn[i]=pow2(g,(p-1)/(1LL<<i));
-	}
-	void ntt(vector<int> &a,int len,int f)
-	{
-		int i,j=0,t,k,w,id;
-		for(i=1;i<len-1;i++)
-		{
-			for(t=len;j^=t>>=1,~j&t;);
-			if(i<j) swap(a[i],a[j]);
-		}
-		for(i=1,id=1;i<len;i<<=1,id++)
-		{
-			t=i<<1;
-			for(j=0;j<len;j+=t)
-			{
-				for(k=0,w=1;k<i;k++,w=1ll*w*wn[id]%p)
-				{
-					int x=a[j+k],y=1ll*w*a[j+k+i]%p;
-					a[j+k]=x+y;
-					if(a[j+k]>=p) a[j+k]-=p;
-					a[j+k+i]=x-y;
-					if(a[j+k+i]<0) a[j+k+i]+=p;
-				}
-			}
-		}
-		if(f)
-		{
-			for(i=1,j=len-1;i<j;i++,j--) swap(a[i],a[j]);
-			int inv=pow2(len,p-2);
-			for(i=0;i<len;i++) a[i]=1ll*a[i]*inv%p;
-		}
-	}
-	vector<int> qpow(vector<int> a,int b)//limt: sz(a)*b is small
-	{
-		int len,i,l1;
-		l1=a.size();
-		for(len=1;len<(l1+1)*b-1;len<<=1);
-		a.resize(len,0);
-		ntt(a,len,0);
-		vector<int> res(len);
-		for(i=0;i<len;i++) res[i]=pow2(a[i],b);
-		ntt(res,len,1);
-		res.resize((l1+1)*b-1);
-		return res;
-	}
-	vector<int> mul(vector<int> a,vector<int> b)
-	{
-		int len,i,l1,l2;
-		l1=a.size();
-		l2=b.size();
-		for(len=1;len<l1+l2;len<<=1);
-		a.resize(len,0);
-		b.resize(len,0);
-		ntt(a,len,0);ntt(b,len,0);
-		vector<int> res(len);
-		for(i=0;i<len;i++) res[i]=1ll*a[i]*b[i]%p;
-		ntt(res,len,1);
-		res.resize(l1+l2-1);
-		return res;
-	}
-	
-	//get kth 
-	vector<int> merge_generating_functions(vector<vector<int>> &dp,int k)
-	{
-		int i,j;
-		priority_queue<pair<int,int>> q;
-		for(i=0;i<dp.size();i++) q.push({-dp[i].size(),i});
-		while(q.size()>1)
-		{
-			i=q.top().second;
-			q.pop();
-			j=q.top().second;
-			q.pop();
-			dp[i]=mul(dp[i],dp[j]);
-			if(dp[i].size()>k) dp[i].resize(k+1);
-			q.push({-dp[i].size(),i});
-		}
-		return dp[q.top().second];
-	}
-};//NTT::getwn();
-ll pow2(ll a,ll b)
-{
-	ll res=1;
-	while(b)
-	{
-		if(b&1) res=res*a%mod;
-		a=a*a%mod;
-		b>>=1;
-	}
-	return res;
 }
-ll inv(ll x)
-{
-	return pow2(x,mod-2);
-}
-ll fac[MAX];
-void init(int n)
-{
-	ll i;
-	fac[0]=1;
-	for(i=1;i<=n;i++) fac[i]=fac[i-1]*i%mod;
-}
-ll C(int n,int m)
-{
-	if(m>n||m<0) return 0;
-	return fac[n]*inv(fac[m]*fac[n-m]%mod)%mod;
-}
-int p[MAX],flag[MAX];
 void go()
 {
-	int T,n,k,i,j,x,cnt,m;
-	init(MAX-10);
-	read(T);
-	while(T--)
+	int t,n,i,a,b,ok,x;
+	read(t);
+	while(t--)
 	{
-		read(n,k);
-		read(p,1,n);
-		if(2*k>n)
-		{
-			puts("0");
-			continue;
-		}
-		VI res;
-		for(i=1;i<=n;i++) flag[i]=0;
+		read(n);
 		for(i=1;i<=n;i++)
 		{
-			if(flag[i]) continue;
-			x=i;
-			cnt=0;
-			while(!flag[x])
-			{
-				flag[x]=1;
-				x=p[x];
-				cnt++;
-			}
-			res.pb(cnt);
+			d[i]=flag[i]=0;
+			mp[i].clear();
+			s[i].clear();
 		}
-		vector<VI > dp;
-		for(i=0;i<sz(res);i++)
+		for(i=1;i<n;i++)
 		{
-			VI tmp;
-			for(j=0;j<=min(res[i],k);j++)
-			{
-				if(2*j>res[i]) break;
-				tmp.pb(C(res[i]-j,j)*res[i]%mod*inv(res[i]-j)%mod);
-			//	debug(i,j,dp[i].back())
-			}
-			dp.pb(tmp);
+			read(a,b);
+			mp[a].pb({b,i});
+			mp[b].pb({a,i});
+			d[a]++;
+			d[b]++;
 		}
-		NTT::getwn();
-		printf("%d\n",NTT::merge_generating_functions(dp,k)[k]);
+		mx=0;
+		fa[0]=0;
+		h[0]=0;
+		dfs(1,0,1);
+		ok=1;
+		VI res;
+		while(mx>0)
+		{
+			set<int> tmp;
+			for(auto &it:s[mx])
+			{
+				if(fa[it]==0) continue;
+				if(flag[fa[it]]) continue;
+				tmp.insert(fa[it]);
+	//			debug(it,fa[it])
+			}
+			VI tmp2;
+			for(auto &it:tmp)
+			{
+				if(d[it]>3 || (d[it]==3 && it==1))
+				{
+					ok=0;
+					break;
+				}
+				else if(d[it]==3 || (d[it]==2 && it==1))
+				{
+					for(auto &to:mp[it])
+					{
+						if(flag[to.x]) continue;
+						if(s[h[it]+1].count(to.x))
+						{
+							s[h[to.x]].erase(to.x);
+							flag[to.x]=1;
+						}
+						else res.pb(to.id);
+						d[it]--;
+						d[to.x]--;
+					}
+					s[h[it]].erase(it);
+					flag[it]=1;
+				}
+				else
+				{
+	//				debug(it,d[it])
+					tmp2.pb(it);
+					continue;
+				}
+			}
+			for(auto &it:tmp2)
+			{
+				x=fa[it];
+				if(x==0) continue;
+				if(flag[x]) continue;
+				if(d[x]>2)
+				{
+					ok=0;
+					break;
+				}
+				for(auto &to:mp[x])
+				{
+					if(flag[to.x]) continue;
+					if(to.x==it)
+					{
+						s[h[to.x]].erase(to.x);
+						flag[it]=1;
+					}
+					else res.pb(to.id);
+					d[x]--;
+					d[to.x]--;
+				}
+				flag[x]=1;
+				for(auto &to:mp[it])
+				{
+					if(s[h[to.x]].count(to.x))
+					{
+						flag[to.x]=1;
+						s[h[to.x]].erase(to.x);
+						d[it]--;
+						d[to.x]--;
+					}
+				}
+			}
+			if(sz(s[mx])) ok=0;
+	//		debug(mx,sz(s[mx]))
+	//		for(auto &it:s[mx]) debug(it)
+			if(!ok) break;
+			mx--;
+		}
+		if(ok==0) puts("-1");
+		else
+		{
+			sort(all(res));
+			res.resize(unique(all(res))-res.begin()); 
+			printf("%d\n",sz(res));
+			println(res);
+			if(sz(res)==0) puts("");
+		}
 	}
 }
+/*
+5
+3 2
+3 5
+1 5
+4 1
+4
+1 2
+1 3
+1 4
+
+*/

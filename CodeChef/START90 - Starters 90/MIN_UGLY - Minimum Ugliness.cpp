@@ -86,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -98,8 +97,19 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
-typedef vector<PII > VPII;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
 /************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -108,7 +118,6 @@ void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-
 void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
 void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
 /*************** IO end  ***************/
-void assert_lr(ll x,ll l,ll r) {assert(x>=l&&x<=r);};
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -120,178 +129,203 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=5e5+10;
-const ll mod=998244353;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
 /*********************************  head  *********************************/
-namespace NTT
+// O(nlogn)-O(1)
+struct LCA
 {
-	const int g=3;
-	const int p=998244353;
-	int wn[35];
-	int pow2(int a,int b)
+	#define type int
+	struct node{int to;type w;node(){}node(int _to,type _w):to(_to),w(_w){}};
+	type dis[MAX];
+	int path[2*MAX],deep[2*MAX],first[MAX],len[MAX],tot,n,dfn[MAX],dfn_tot;
+	int dp[2*MAX][22];
+	vector<node> mp[MAX];
+	void dfs(int x,int pre,int h)
 	{
-		int res=1;
-		while(b>0)
+		int i;
+		dfn[x]=++dfn_tot;
+		path[++tot]=x;
+		first[x]=tot;
+		deep[tot]=h;
+		for(i=0;i<mp[x].size();i++)
 		{
-			if(b&1) res=1ll*res*a%p;
-			a=1ll*a*a%p;
-			b>>=1;
+			int to=mp[x][i].to;
+			if(to==pre) continue;
+			dis[to]=dis[x]+mp[x][i].w;
+			len[to]=len[x]+1;
+			dfs(to,x,h+1);
+			path[++tot]=x;
+			deep[tot]=h;
 		}
-		return res;
 	}
-	void getwn()
+	void ST(int n)
 	{
-		assert(p==mod);
-		for(int i=0;i<25;i++) wn[i]=pow2(g,(p-1)/(1LL<<i));
-	}
-	void ntt(vector<int> &a,int len,int f)
-	{
-		int i,j=0,t,k,w,id;
-		for(i=1;i<len-1;i++)
+		int i,j,x,y;
+		for(i=1;i<=n;i++) dp[i][0]=i;
+		for(j=1;(1<<j)<=n;j++)
 		{
-			for(t=len;j^=t>>=1,~j&t;);
-			if(i<j) swap(a[i],a[j]);
-		}
-		for(i=1,id=1;i<len;i<<=1,id++)
-		{
-			t=i<<1;
-			for(j=0;j<len;j+=t)
+			for(i=1;i+(1<<j)-1<=n;i++)
 			{
-				for(k=0,w=1;k<i;k++,w=1ll*w*wn[id]%p)
-				{
-					int x=a[j+k],y=1ll*w*a[j+k+i]%p;
-					a[j+k]=x+y;
-					if(a[j+k]>=p) a[j+k]-=p;
-					a[j+k+i]=x-y;
-					if(a[j+k+i]<0) a[j+k+i]+=p;
-				}
+				x=dp[i][j-1];
+				y=dp[i+(1<<(j-1))][j-1];
+				dp[i][j]=deep[x]<deep[y]?x:y;
 			}
 		}
-		if(f)
+	}
+	int query(int l,int r)
+	{
+		int len,x,y;
+		len=(int)log2(r-l+1); 
+		x=dp[l][len];
+		y=dp[r-(1<<len)+1][len];
+		return deep[x]<deep[y]?x:y;
+	}
+	int lca(int x,int y)
+	{
+		int l,r,pos;
+		l=first[x];
+		r=first[y];
+		if(l>r) swap(l,r);
+		pos=query(l,r);
+		return path[pos];
+	} 
+	type get_dis(int a,int b){return dis[a]+dis[b]-2*dis[lca(a,b)];}
+	int get_len(int a,int b){return len[a]+len[b]-2*len[lca(a,b)];}
+	void init(int _n)
+	{
+		n=_n;
+		for(int i=0;i<=n;i++)
 		{
-			for(i=1,j=len-1;i<j;i++,j--) swap(a[i],a[j]);
-			int inv=pow2(len,p-2);
-			for(i=0;i<len;i++) a[i]=1ll*a[i]*inv%p;
+			dis[i]=0;
+			len[i]=0;
+			mp[i].clear();
 		}
 	}
-	vector<int> qpow(vector<int> a,int b)//limt: sz(a)*b is small
+	void add_edge(int a,int b,type w=1)
 	{
-		int len,i,l1;
-		l1=a.size();
-		for(len=1;len<(l1+1)*b-1;len<<=1);
-		a.resize(len,0);
-		ntt(a,len,0);
-		vector<int> res(len);
-		for(i=0;i<len;i++) res[i]=pow2(a[i],b);
-		ntt(res,len,1);
-		res.resize((l1+1)*b-1);
-		return res;
+		mp[a].pb(node(b,w));
+		mp[b].pb(node(a,w));
 	}
-	vector<int> mul(vector<int> a,vector<int> b)
+	void work(int rt)
 	{
-		int len,i,l1,l2;
-		l1=a.size();
-		l2=b.size();
-		for(len=1;len<l1+l2;len<<=1);
-		a.resize(len,0);
-		b.resize(len,0);
-		ntt(a,len,0);ntt(b,len,0);
-		vector<int> res(len);
-		for(i=0;i<len;i++) res[i]=1ll*a[i]*b[i]%p;
-		ntt(res,len,1);
-		res.resize(l1+l2-1);
-		return res;
+		dfn_tot=0;
+		tot=0;
+		dfs(rt,0,0);
+		ST(2*n-1);
 	}
-	
-	//get kth 
-	vector<int> merge_generating_functions(vector<vector<int>> &dp,int k)
+	int lca_root(int rt,int a,int b)
 	{
-		int i,j;
-		priority_queue<pair<int,int>> q;
-		for(i=0;i<dp.size();i++) q.push({-dp[i].size(),i});
-		while(q.size()>1)
+		int fa,fb;
+		fa=lca(a,rt);
+		fb=lca(b,rt);
+		if(fa==fb) return lca(a,b);
+		else
 		{
-			i=q.top().second;
-			q.pop();
-			j=q.top().second;
-			q.pop();
-			dp[i]=mul(dp[i],dp[j]);
-			if(dp[i].size()>k) dp[i].resize(k+1);
-			q.push({-dp[i].size(),i});
+			if(get_dis(fa,rt)<get_dis(fb,rt)) return fa;
+			else return fb;
 		}
-		return dp[q.top().second];
 	}
-};//NTT::getwn();
-ll pow2(ll a,ll b)
+	#undef type
+}lca;
+/*
+lca.init(n);
+lca.add_edge(a,b,w) undirected edge.
+lca.work(rt);
+*/
+struct node{int id,w;};
+struct Virtual_Tree
 {
-	ll res=1;
-	while(b)
+	int st[MAX],top;
+	int build_vtree(VI &a,vector<node> vtree_mp[])// return root 
 	{
-		if(b&1) res=res*a%mod;
-		a=a*a%mod;
-		b>>=1;
+		int now_lca;
+		sort(all(a),[&](int x,int y){return lca.dfn[x]<lca.dfn[y];});
+		a.erase(unique(all(a)),a.end());
+		assert(sz(a)>0);
+		top=0;
+		st[top++]=a[0];
+		VI tmp;
+		for(int i=1;i<sz(a);i++)
+		{
+			if(top==0)
+			{
+				st[top++]=a[i];
+				continue;
+			}
+			now_lca=lca.lca(a[i],st[top-1]);
+			while(top>1&&lca.dfn[st[top-2]]>=lca.dfn[now_lca])
+			{
+				vtree_mp[st[top-2]].pb({st[top-1],lca.get_len(st[top-2],st[top-1])});
+				vtree_mp[st[top-1]].pb({st[top-2],lca.get_len(st[top-2],st[top-1])});
+				top--;
+			}
+			if(now_lca!=st[top-1])
+			{
+				vtree_mp[now_lca].pb({st[top-1],lca.get_len(now_lca,st[top-1])});
+				vtree_mp[st[top-1]].pb({now_lca,lca.get_len(now_lca,st[top-1])});
+				st[top-1]=now_lca;
+				tmp.push_back(now_lca);
+			}
+			st[top++]=a[i];
+		}
+		while(top>1)
+		{
+			vtree_mp[st[top-2]].pb({st[top-1],lca.get_len(st[top-2],st[top-1])});
+			vtree_mp[st[top-1]].pb({st[top-2],lca.get_len(st[top-2],st[top-1])});
+			top--;
+		}
+		for(auto it:tmp) a.push_back(it);
+		return st[0];
 	}
-	return res;
-}
-ll inv(ll x)
+	void clear_vtree(VI &a,vector<node> vtree_mp[])
+	{
+		for(auto &it:a) vtree_mp[it].clear();
+	}
+}vt; // need lca and dfn
+vector<node> mp[MAX];
+int mx,rt;
+void dfs(int x,int fa,int h)
 {
-	return pow2(x,mod-2);
+	for(auto &to:mp[x])
+	{
+		if(to.id==fa) continue;
+		dfs(to.id,x,h+to.w);
+	}
+	if(h>mx)
+	{
+		rt=x;
+		mx=h;
+	}
 }
-ll fac[MAX];
-void init(int n)
-{
-	ll i;
-	fac[0]=1;
-	for(i=1;i<=n;i++) fac[i]=fac[i-1]*i%mod;
-}
-ll C(int n,int m)
-{
-	if(m>n||m<0) return 0;
-	return fac[n]*inv(fac[m]*fac[n-m]%mod)%mod;
-}
-int p[MAX],flag[MAX];
 void go()
 {
-	int T,n,k,i,j,x,cnt,m;
-	init(MAX-10);
-	read(T);
-	while(T--)
+	int t,n,q,i,a,b,k,x;
+	read(t);
+	while(t--)
 	{
-		read(n,k);
-		read(p,1,n);
-		if(2*k>n)
+		read(n,q);
+		for(i=1;i<=n;i++) mp[i].clear();
+		lca.init(n);
+		for(i=1;i<n;i++)
 		{
-			puts("0");
-			continue;
+			read(a,b);
+			lca.add_edge(a,b);
 		}
-		VI res;
-		for(i=1;i<=n;i++) flag[i]=0;
-		for(i=1;i<=n;i++)
+		lca.work(1);
+		while(q--)
 		{
-			if(flag[i]) continue;
-			x=i;
-			cnt=0;
-			while(!flag[x])
-			{
-				flag[x]=1;
-				x=p[x];
-				cnt++;
-			}
-			res.pb(cnt);
+			read(k);
+			VI tmp(k);
+			for(auto &it:tmp) read(it);
+			rt=vt.build_vtree(tmp,mp);
+			mx=0;
+			dfs(rt,0,0);
+			mx=0;
+			dfs(rt,0,0);
+			printf("%d\n",(mx+1)/2);
+			vt.clear_vtree(tmp,mp);
 		}
-		vector<VI > dp;
-		for(i=0;i<sz(res);i++)
-		{
-			VI tmp;
-			for(j=0;j<=min(res[i],k);j++)
-			{
-				if(2*j>res[i]) break;
-				tmp.pb(C(res[i]-j,j)*res[i]%mod*inv(res[i]-j)%mod);
-			//	debug(i,j,dp[i].back())
-			}
-			dp.pb(tmp);
-		}
-		NTT::getwn();
-		printf("%d\n",NTT::merge_generating_functions(dp,k)[k]);
 	}
 }
+
