@@ -9,7 +9,7 @@ void dfs(int x)
 	if(flag[x]) return;
 	flag[x]=1;
 	cnt[x]++;
-	for(auto &to:mp[x]) dfs(to);
+	for(int i=0;i<mp[x].size();i++) dfs(mp[x][i]);
 }
 int main()
 {
@@ -21,16 +21,16 @@ int main()
 		cnt[i]=0;
 	}
 	vector<int> res(k);
-	for(auto &it:res) scanf("%d",&it);
+	for(i=0;i<res.size();i++) scanf("%d",&res[i]);
 	while(m--)
 	{
 		scanf("%d%d",&a,&b);
 		mp[a].push_back(b);
 	}
-	for(auto &it:res)
+	for(i=0;i<res.size();i++)
 	{
 		memset(flag,0,sizeof flag);
-		dfs(it);
+		dfs(res[i]);
 	}
 	ans=0;
 	for(i=1;i<=n;i++) ans+=(cnt[i]==k);
