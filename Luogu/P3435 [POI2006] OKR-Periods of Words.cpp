@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
 const int MAX=1e6+10;
 struct KMP
 {
@@ -11,7 +12,8 @@ struct KMP
 		len=strlen(s+1);
 		for(i=1;i<=len;i++) t[i]=s[i];
 		t[len+1]='\0';
-		j=nex[1]=0;
+		nex[0]=nex[1]=0;
+		j=0;
 		for(i=2;i<=len;i++)
 		{
 			while(j&&t[j+1]!=s[i]) j=nex[j];
@@ -39,15 +41,30 @@ struct KMP
 		return res;
 	}
 }kmp;// kmp.get_next(s); s[1..len]
-char a[MAX],b[MAX];
+char s[MAX];
+int dp[MAX];
+int dfs(int x)
+{
+	if(dp[x]!=-1) return dp[x];
+	if(kmp.nex[x]==0) return dp[x]=x;
+	dp[x]=dfs(kmp.nex[x]);
+	return dp[x];
+}
 int main()
 {
-	int i,n;
-	scanf("%s",a+1);
-	scanf("%s",b+1);
-	kmp.get_next(b);
-	vector<int> res=kmp.match(a);
-	for(auto &it:res) printf("%d\n",it);
-	for(i=1;i<=kmp.len;i++) printf("%d%c",kmp.nex[i]," \n"[i==n]);
+	int i,n,res;
+	ll ans;
+	scanf("%d",&n);
+	scanf("%s",s+1);
+	kmp.get_next(s);
+	ans=0;
+	for(i=0;i<=n;i++) dp[i]=-1;
+	for(i=1;i<=n;i++)
+	{
+		res=dfs(i);
+		if(res>0) ans+=i-res;
+	}
+	printf("%lld\n",ans);
 	return 0;
 }
+
