@@ -54,7 +54,7 @@ void update(int l,int r,int v,int id)
 	int mid;
 	if(tree[id].l==l&&tree[id].r==r)
 	{
-		tree[id].v=v;
+		tree[id].v=max(tree[id].v,v);
 		return;
 	}
 	mid=(tree[id].l+tree[id].r)/2;
@@ -88,22 +88,20 @@ int query(int l,int r,int id)
 int main()
 {
 	int n,m,i,v,a,b;
-	char op;
-	while(~scanf("%d%d",&n,&m))
+	char op[2];
+	scanf("%d%d",&n,&m);
+	build(1,n,1);
+	for(i=1;i<=n;i++)
 	{
-		build(1,n,1);
-		for(i=1;i<=n;i++)
-		{
-			scanf("%d",&v);
-			update(i,i,v,1);
-		}
-		while(m--)
-		{
-			getchar();
-			scanf("%c %d %d",&op,&a,&b);
-			if(op=='Q') printf("%d\n",query(a,b,1));
-			else if(op=='U') update(a,a,b,1);
-		}
+		scanf("%d",&v);
+		update(i,i,v,1);
+	}
+	while(m--)
+	{
+		getchar();
+		scanf("%s%d%d",op,&a,&b);
+		if(op[0]=='Q') printf("%d\n",query(a,b,1));
+		else if(op[0]=='U') update(a,a,b,1);
 	}
     return 0;
 }

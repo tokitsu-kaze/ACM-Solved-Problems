@@ -1,0 +1,177 @@
+#define mem(a,b) memset((a),(b),sizeof(a))
+#define MP make_pair
+#define pb push_back
+#define fi first
+#define se second
+#define sz(x) ((int)x.size())
+#define all(x) x.begin(),x.end()
+#define sqr(x) ((x)*(x))
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> PII;
+typedef pair<ll,ll> PLL;
+typedef pair<int,ll> PIL;
+typedef pair<ll,int> PLI;
+typedef vector<int> VI;
+typedef vector<ll> VL;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
+/************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
+const int INF=0x3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
+const double PI=acos(-1.0);
+const double eps=1e-6;
+const int MAX=2e5+10;
+const ll mod=1e9+7;
+/*********************************  head  *********************************/
+struct Discretization
+{
+	#define type ll
+	vector<type> a;
+	void init(){a.clear();}
+	void add(type x){a.pb(x);}
+	void work(){sort(all(a));a.resize(unique(all(a))-a.begin());}
+	int get_pos(type x){return lower_bound(all(a),x)-a.begin()+1;}
+	type get_val(int pos){return a[pos-1];}
+	int size(){return a.size();}
+	#undef type
+}d;
+struct Segment_Tree
+{
+	#define type int
+	#define ls (id<<1)
+	#define rs (id<<1|1)
+	int n,ql,qr;
+	type a[MAX],v[MAX<<2],tag[MAX<<2],qv;
+	void pushup(int id)
+	{
+		v[id]=max(v[ls],v[rs]);
+	}
+	void pushdown(int l,int r,int id)
+	{
+		if(!tag[id]) return;
+		int mid=(l+r)>>1;
+		
+	}
+	void build(int l,int r,int id)
+	{
+		tag[id]=0;
+		v[id]=-1;
+		if(l==r)
+		{
+			//init
+			return;
+		}
+		int mid=(l+r)>>1;
+		build(l,mid,ls);
+		build(mid+1,r,rs);
+		pushup(id);
+	}
+	void update(int l,int r,int id)
+	{
+		if(l>=ql&&r<=qr)
+		{
+			//do something
+			v[id]=max(v[id],qv);
+			return;
+		}
+		pushdown(l,r,id);
+		int mid=(l+r)>>1;
+		if(ql<=mid) update(l,mid,ls);
+		if(qr>mid) update(mid+1,r,rs);
+		pushup(id);
+	}
+	type res;
+	void query(int l,int r,int id)
+	{
+		if(l>=ql&&r<=qr)
+		{
+			//do something
+			res=max(res,v[id]);
+			return;
+		}
+		pushdown(l,r,id);
+		int mid=(l+r)>>1;
+		if(ql<=mid) query(l,mid,ls);
+		if(qr>mid) query(mid+1,r,rs);
+	}
+	void build(int _n){n=_n;build(1,n,1);}
+	void upd(int l,int r,type v)
+	{
+		ql=l;
+		qr=r;
+		qv=v;
+		update(1,n,1);
+	}
+	type ask(int l,int r)//init res
+	{
+		ql=l;
+		qr=r;
+		res=-1;
+		query(1,n,1);
+		return res;
+	}
+	#undef type
+	#undef ls
+	#undef rs
+}tr;
+struct node
+{
+	int x,y,id;
+};
+class Solution {
+public:
+    vector<int> maximumSumQueries(vector<int>& nums1, vector<int>& nums2, vector<vector<int>>& queries) {
+        VPII res;
+        int i,pos;
+        d.init();
+        for(i=0;i<sz(nums1);i++)
+        {
+        	res.pb({nums1[i],nums2[i]});
+        	d.add(nums2[i]);
+		}
+		vector<node> qst;
+		i=0;
+		for(auto &it:queries)
+		{
+			qst.pb({it[0],it[1],i++});
+			d.add(it[1]);
+		}
+		d.work();
+        sort(all(res));
+        reverse(all(res));
+        sort(all(qst),[&](node a,node b){
+        	return a.x>b.x;
+		});
+        tr.build(sz(d));
+        i=0;
+        VI ans(sz(qst),-1);
+        for(auto &it:qst)
+        {
+        	while(i<sz(res) && res[i].fi>=it.x)
+        	{
+        		pos=d.get_pos(res[i].se);
+        		tr.upd(pos,pos,res[i].fi+res[i].se);
+        		i++;
+			}
+			pos=d.get_pos(it.y);
+			ans[it.id]=tr.ask(pos,sz(d));
+		}
+		return ans;
+    }
+};
