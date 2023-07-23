@@ -17,11 +17,21 @@ struct Kuhn_Munkres
 		{
 			for(int j=1;j<=n;j++)
 			{
+				/*
+				- 允许不完美匹配, 虚边边权=0
+				- 不允许不完美匹配, 虚边边权=-inf,
+				  这样求出来的匹配会使虚边最少, 
+				  如果发现不得不选择虚边，就无解
+				*/
 				w[i][j]=-inf;
 			}
 		}
 	}
-	void add_edge(int x,int y,type val){w[x][y]=val;}
+	void add_edge(int x,int y,type val)
+	{
+		// 需要注意是否有重边，以及边权为负是否必须匹配
+		w[x][y]=val;
+	}
 	void match(int y){while(y) swap(y,mx[my[y]=pre[y]]);}
 	void bfs(int x)
 	{
@@ -81,7 +91,7 @@ struct Kuhn_Munkres
 	}
 	type max_match()
 	{
-		int i;
+		int i,j;
 		type res;
 		for(i=1;i<=n;i++)
 		{
@@ -92,12 +102,12 @@ struct Kuhn_Munkres
 		res=0;
 		for(i=1;i<=n;i++)
 		{
-			if(w[i][mx[i]]!=-inf) res+=w[i][mx[i]];
+			// 不允许不完美匹配可能要判断无解 
+			res+=w[i][mx[i]];
 		}
 		return res;
 	}
 	#undef type
-	#undef inf
 }km;
 /*
 O(n^3)

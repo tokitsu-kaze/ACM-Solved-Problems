@@ -5,7 +5,7 @@ namespace fastIO{
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-//	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
+	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
 	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
@@ -45,6 +45,14 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
+	inline bool read_line(char *s){
+		char ch=nc();
+		for(;blank(ch);ch=nc());
+		if(IOerror)return false;
+		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
+		*s=0;
+		return true;
+	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
@@ -73,21 +81,43 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define debug(...) 233;
 #endif
 /*************  debug end  *************/
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #define mem(a,b) memset((a),(b),sizeof(a))
 #define MP make_pair
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
 typedef pair<ll,ll> PLL;
+typedef pair<int,ll> PIL;
+typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
+/************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
+void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -96,72 +126,50 @@ int main(){
 	go();return 0;
 }
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e6+10;
+const int MAX=2e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int nex[MAX];
-void get_next(char *s,int *nex,int len)
+ll qpow(ll a,ll b)
 {
-	int i,j;
-	i=0;
-	j=nex[0]=-1;
-	while(i<len)
+	ll res=1;
+	while(b>0)
 	{
-		if(j==-1||s[i]==s[j]) nex[++i]=++j;
-		else j=nex[j];
+		if(b&1) res=res*a%mod;
+		a=a*a%mod;
+		b>>=1;
 	}
+	return res;
 }
-int min_representation(char *s,int n) // s[0..n-1]
-{
-	int i,j,k,tmp;
-	i=k=0;
-	j=1;
-	while(i<n&&j<n&&k<n)
-	{
-		tmp=s[(i+k)%n]-s[(j+k)%n];
-		if(!tmp) k++;
-		else
-		{
-			if(tmp>0) i=i+k+1;
-			else j=j+k+1;
-			if(i==j) j++;
-			k=0;
-		}
-	}
-	return i<j?i:j;
-}
-int max_representation(char *s,int n) // s[0..n-1]
-{
-	int i,j,k,tmp;
-	i=k=0;
-	j=1;
-	while(i<n&&j<n&&k<n)
-	{
-		tmp=s[(i+k)%n]-s[(j+k)%n];
-		if(!tmp) k++;
-		else
-		{
-			if(tmp<0) i=i+k+1;
-			else j=j+k+1;
-			if(i==j) j++;
-			k=0;
-		}
-	}
-	return i<j?i:j;
-}
-char s[MAX];
+ll inv(ll x){return qpow(x,mod-2);}
+int a[MAX];
 void go()
 {
-	int len,loop;
-	while(read(s))
+	int t,n,m,k,i;
+	ll ans,fz,fm,nowfz,nowfm;
+	read(t);
+	while(t--)
 	{
-		len=strlen(s);
-		get_next(s,nex,len);
-		if(len%(len-nex[len])==0) loop=len/(len-nex[len]);
-		else loop=1;
-		printf("%d %d %d %d\n",min_representation(s,len)+1,loop,max_representation(s,len)+1,loop);
+		read(n,m,k);
+		read(a,1,n);
+		ans=qpow(k-1,m);
+		fz=fm=1;
+		nowfz=m;
+		nowfm=1;
+		for(i=1;i<n;i++)
+		{
+			fz=fz*nowfz%mod;
+			fm=fm*nowfm%mod;
+			nowfz--;
+			nowfm++;
+	//		debug(fz,fm)
+			ans=(ans+fz*inv(fm)%mod*qpow(k-1,m-i))%mod;
+		}
+		printf("%lld\n",(qpow(k,m)-ans+mod)%mod);
 	}
-} 
+}
+/*
+k^m-sum{C(m,i)*(k-1)^(m-i)}
+*/
