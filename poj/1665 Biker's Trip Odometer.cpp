@@ -28,7 +28,7 @@ int main()
 	while(~scanf("%lf%d%lf",&d,&n,&t)&&n)
 	{
 		double s=n*3.1415927*d/12/5280;
-		printf("Trip #%d: %.2lf %.2lf\n",cas++,s,s/(t/3600));
+		printf("Trip #%d: %.2f %.2f\n",cas++,s,s/(t/3600));
 	}
 	return 0;
 }

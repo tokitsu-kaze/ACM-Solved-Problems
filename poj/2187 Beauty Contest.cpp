@@ -103,7 +103,7 @@ int main()
 		}
 		res=graham(p);
 		ans=RC_FarthestPair(res);
-		printf("%.0lf\n",ans);
+		printf("%.0f\n",ans);
 	}
 	return 0;
 }

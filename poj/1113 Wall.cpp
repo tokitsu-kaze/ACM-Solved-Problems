@@ -112,7 +112,7 @@ int main()
 		}
 		if(k>2) sum+=dis(res[k-1],res[0]);
 		sum+=2*r*PI;
-		printf("%.0lf\n",sum);
+		printf("%.0f\n",sum);
 		if(t) puts("");
 	}
 	return 0;

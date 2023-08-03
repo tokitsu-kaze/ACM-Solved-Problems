@@ -101,7 +101,7 @@ int main()
 			p[i].input();
 		}
 		sort(p,p+n,cmpxy);
-		printf("%.2lf\n",ClosestPair(0,n-1)/2);
+		printf("%.2f\n",ClosestPair(0,n-1)/2);
 	}
 	return 0;
 }

@@ -14,14 +14,8 @@
 ////Run time:15MS
 ////Run memory:1404KB
 //////////////////System Comment End//////////////////
-#include <stdio.h>
-int swap(int *a,int *b)
-{
-	int temp;
-	temp=*a;
-	*a=*b;
-	*b=temp;
-}
+#include <bits/stdc++.h>
+using namespace std;
 int main()
 {
 	int a,b,i,count,max,n;
@@ -29,7 +23,7 @@ int main()
     {
 		max=0;
 		printf("%d %d ",a,b);
-		if(a>b) swap(&a,&b);
+		if(a>b) swap(a,b);
 		for(i=a;i<=b;i++)
 		{
 			count=1;

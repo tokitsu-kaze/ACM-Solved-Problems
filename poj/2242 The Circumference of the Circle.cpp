@@ -68,7 +68,7 @@ int main()
 	while(~scanf("%lf%lf%lf%lf%lf%lf",&a.x,&a.y,&b.x,&b.y,&c.x,&c.y))
 	{
 		res=CircumscribedCircle(a,b,c);
-		printf("%.2lf\n",2*res.r*PI);
+		printf("%.2f\n",2*res.r*PI);
 	}
 	return 0;
 }

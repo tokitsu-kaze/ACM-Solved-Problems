@@ -33,7 +33,7 @@ int main()
 			if(m%2&&n%2) ans=1.0*m*n+0.41;
 			else ans=1.0*m*n;
 			printf("Scenario #%d:\n",cas++);
-			printf("%.2lf\n",ans);
+			printf("%.2f\n",ans);
 			puts("");
 		}
 	}

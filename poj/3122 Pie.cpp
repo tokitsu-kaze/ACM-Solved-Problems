@@ -32,7 +32,7 @@ int main()
 				if(count<n) rb=mid;
 				else if(count>=n) lb=mid;
 			}
-			printf("%.4lf\n",mid);
+			printf("%.4f\n",mid);
 		}
 	}
 	return 0;

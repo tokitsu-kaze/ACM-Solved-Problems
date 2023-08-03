@@ -134,7 +134,7 @@ int main()
 		l.push_back(t);
 		vector<Point> res;
 		res=hpi(l);
-		printf("%.1lf\n",PolygonArea(res));
+		printf("%.1f\n",PolygonArea(res));
 	}
 	return 0;
 }

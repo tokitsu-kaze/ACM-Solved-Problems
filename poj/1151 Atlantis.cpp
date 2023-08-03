@@ -133,7 +133,7 @@ int main()
 			ans+=(seg[i+1].h-seg[i].h)*tree[1].len;
 		}
 		printf("Test case #%d\n",cas++);
-		printf("Total explored area: %.2lf\n",ans);
+		printf("Total explored area: %.2f\n",ans);
 		puts("");
 	}
     return 0;

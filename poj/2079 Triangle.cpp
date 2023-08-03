@@ -100,7 +100,7 @@ int main()
 		}
 		res=graham(p);
 		ans=RC_Triangle(res);
-		printf("%.2lf\n",ans);
+		printf("%.2f\n",ans);
 	}
 	return 0;
 }

@@ -110,7 +110,7 @@ int main()
 			else
 			{
 				ans=PointOfLineInter(e,f);
-				printf("POINT %.2lf %.2lf\n",ans.x,ans.y); 
+				printf("POINT %.2f %.2f\n",ans.x,ans.y); 
 			}
 		}
 		puts("END OF OUTPUT");

@@ -130,7 +130,7 @@ int main()
 		resp=graham(p);
 		resq=graham(q);
 		ans=RC_Dis(p,q);
-		printf("%.5lf\n",ans);
+		printf("%.5f\n",ans);
 	}
 	return 0;
 }

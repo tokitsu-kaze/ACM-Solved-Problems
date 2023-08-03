@@ -60,7 +60,7 @@ Point OrthoCenter(Point a,Point b,Point c)
 			b.input();
 			c.input();
 			res=OrthoCenter(a,b,c);
-			printf("%.4lf %.4lf\n",res.x+eps,res.y+eps);
+			printf("%.4f %.4f\n",res.x+eps,res.y+eps);
 		}
 	}
 	return 0;

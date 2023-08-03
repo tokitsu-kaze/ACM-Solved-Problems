@@ -151,7 +151,7 @@ int main()
 				l[i]=line(p[i+1],p[i]);
 			}
 			ans=calarea(hpi(n));
-			printf("%.2lf\n",ans);
+			printf("%.2f\n",ans);
 		}
 	}
 	return 0;

@@ -16,17 +16,17 @@ int main()
     for(i=0;i<=1;i++)
     {
         e=e+1.0/fac(i);
-        printf("%d %.0lf\n",i,e);
+        printf("%d %.0f\n",i,e);
     }
     for(i=2;i<=2;i++)
     {
         e=e+1.0/fac(i);
-        printf("%d %.1lf\n",i,e);
+        printf("%d %.1f\n",i,e);
     }
     for(i=3;i<=9;i++)
     {
         e=e+1.0/fac(i);
-        printf("%d %.9lf\n",i,e);
+        printf("%d %.9f\n",i,e);
     }
     return 0;
 }
