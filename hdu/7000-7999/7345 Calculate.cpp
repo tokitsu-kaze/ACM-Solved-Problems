@@ -132,19 +132,59 @@ const double eps=1e-6;
 const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
+int k[MAX],b[MAX],p[MAX];
+int mulk[32][MAX],sum[32][MAX],nex[32][MAX];
+/*
+(((k1+b1)*k2+b2)*k3+b3)*k4+b4
+k1*k2*k3*k4+b1*k2*k3*k4+b2*k3*k4+b3*k4+b4
+
+(k1+b1)*k2+b2
+k1*k2+b1*k2+b2
+*/
 void go()
 {
-	int n,i,ans,x;
-	while(read(n))
+	int t,n,q,i,j,x,l,y;
+	ll ans,mk;
+	read(t);
+	while(t--)
 	{
-		map<int,int> mp;
-		ans=0;
-		for(i=0;i<n;i++)
+		read(n,q);
+		read(k,1,n);
+		read(b,1,n);
+		read(p,1,n);
+		for(i=1;i<=n;i++)
 		{
-			read(x);
-			mp[x]++;
-			ans=max(ans,mp[x]);
+			nex[0][i]=p[i];
+			sum[0][i]=b[p[i]];
+			mulk[0][i]=k[p[i]];
 		}
-		printf("%d\n",ans);
+		for(i=1;i<=30;i++)
+		{
+			for(j=1;j<=n;j++)
+			{
+				nex[i][j]=nex[i-1][nex[i-1][j]];
+				sum[i][j]=(1ll*sum[i-1][j]*mulk[i-1][nex[i-1][j]]+
+							sum[i-1][nex[i-1][j]])%mod;
+				mulk[i][j]=1ll*mulk[i-1][j]*mulk[i-1][nex[i-1][j]]%mod;
+			}
+		}
+		while(q--)
+		{
+			read(x,l,y);
+			ans=0;
+			mk=1;
+			for(i=30;~i;i--)
+			{
+				if((l>>i)&1)
+				{
+					ans=(ans*mulk[i][x]+sum[i][x])%mod;
+					mk=mk*mulk[i][x]%mod;
+	//				debug(i,x,sum[i][x],mulk[i][x])
+					x=nex[i][x];
+				}
+			}
+	//		debug(ans,mk)
+			printf("%lld\n",(ans+y*mk)%mod);
+		}
 	}
 }

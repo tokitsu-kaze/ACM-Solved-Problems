@@ -129,22 +129,161 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e5+10;
+const int MAX=5e4+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
+vector<int> mp[MAX];
+int deep[MAX],fa[MAX],sz[MAX],son[MAX];
+int rnk[MAX],top[MAX],tid[MAX],tot;
+void init()
+{
+	mem(son,-1);
+	tot=0;
+}
+void dfs1(int x,int pre,int h)  
+{
+	int i,to;
+	deep[x]=h;
+	fa[x]=pre;
+	sz[x]=1;
+	for(i=0;i<sz(mp[x]);i++)
+	{
+		to=mp[x][i];
+		if(to==pre) continue;
+		dfs1(to,x,h+1);
+		sz[x]+=sz[to];
+		if(son[x]==-1||sz[to]>sz[son[x]]) son[x]=to;
+	}
+}
+void dfs2(int x,int tp)
+{
+	int i,to;
+	top[x]=tp;
+	tid[x]=++tot;
+	rnk[tid[x]]=x;
+	if(son[x]==-1) return;
+	dfs2(son[x],tp);
+	for(i=0;i<sz(mp[x]);i++)
+	{
+		to=mp[x][i];
+		if(to!=son[x]&&to!=fa[x]) dfs2(to,to);
+	}
+}
+struct node
+{
+	int l,r,mid,sum,tag;
+	node(){}
+	node(int a,int b)
+	{
+		l=a;
+		r=b;
+		sum=0;
+		tag=0;
+		mid=(l+r)>>1;
+	}
+}tr[4*MAX];
+int v[MAX];
+void build(int l,int r,int id)
+{
+	int mid;
+	tr[id]=node(l,r);
+	if(l==r)
+	{ 
+		tr[id].sum=v[rnk[l]];
+		return;
+	}
+	mid=tr[id].mid;
+	build(l,mid,id<<1);
+	build(mid+1,r,id<<1|1);
+	tr[id].sum=tr[id<<1].sum+tr[id<<1|1].sum;
+}
+void pushdown(int id)
+{
+	tr[id<<1].tag+=tr[id].tag;
+	tr[id<<1|1].tag+=tr[id].tag;
+	tr[id<<1].sum+=tr[id].tag;
+	tr[id<<1|1].sum+=tr[id].tag;
+	tr[id].tag=0;
+}
+void update(int l,int r,int id,int v)
+{
+	int mid;
+	if(l<=tr[id].l&&r>=tr[id].r)
+	{
+		tr[id].sum+=v;
+		tr[id].tag+=v;
+		return;
+	}
+	if(tr[id].tag) pushdown(id);
+	mid=tr[id].mid;
+	if(r<=mid) update(l,r,id<<1,v);
+	else if(l>=mid+1) update(l,r,id<<1|1,v);
+	else
+	{
+		update(l,mid,id<<1,v);
+		update(mid+1,r,id<<1|1,v);
+	}
+	tr[id].sum=max(tr[id<<1].sum,tr[id<<1|1].sum);
+}
+int query(int l,int r,int id)
+{
+	int mid;
+	if(l==tr[id].l&&r==tr[id].r)
+	{
+		return tr[id].sum;
+	}
+	if(tr[id].tag) pushdown(id);
+	mid=tr[id].mid;
+	if(r<=mid) return query(l,r,id<<1);
+	else if(l>=mid+1) return query(l,r,id<<1|1);
+	else return query(l,mid,id<<1)+query(mid+1,r,id<<1|1);
+}
+void modify(int x,int y,int val)
+{  
+	while(top[x]!=top[y])
+	{  
+		if(deep[top[x]]<deep[top[y]]) swap(x,y);
+		update(tid[top[x]],tid[x],1,val);
+		x=fa[top[x]];
+    }  
+    if(deep[x]>deep[y]) swap(x,y);
+    update(tid[x],tid[y],1,val);
+}
 void go()
 {
-	int n,i,ans,x;
-	while(read(n))
+	int n,m,q,i,x,y,w,a,b;
+	char op[11];
+	while(read(n,m,q))
 	{
-		map<int,int> mp;
-		ans=0;
-		for(i=0;i<n;i++)
+		for(i=1;i<=n;i++)
 		{
-			read(x);
-			mp[x]++;
-			ans=max(ans,mp[x]);
+			mp[i].clear();
+			read(v[i]);
 		}
-		printf("%d\n",ans);
+		while(m--)
+		{
+			read(a,b);
+			mp[a].pb(b);
+			mp[b].pb(a);
+		}
+		init();
+		dfs1(1,0,0);
+		dfs2(1,1);
+		build(1,n,1);
+		while(q--)
+		{
+			read(op);
+			if(op[0]=='Q')
+			{
+				read(x);
+				printf("%d\n",query(tid[x],tid[x],1));
+			}
+			else
+			{
+				read(x,y,w);
+				if(op[0]=='D') w*=-1;
+				modify(x,y,w);
+			}
+		}
 	}
 }

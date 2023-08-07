@@ -42,7 +42,7 @@ int main()
 					case '+':printf("%d\n",b+c); break;
 					case '-':printf("%d\n",b-c); break;
 					case '*':printf("%d\n",b*c); break;
-					case '/':printf("%.2lf\n",1.0*b/c); break;
+					case '/':printf("%.2f\n",1.0*b/c); break;
 				}
 			}
 		}

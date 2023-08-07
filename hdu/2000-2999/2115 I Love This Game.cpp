@@ -32,12 +32,12 @@
 #define MAX 10000+10
 using namespace std;
 typedef long long ll;
-struct time
+struct node
 {
 	char name[101];
 	int h,m;
 }a[15];
-int cmp(time a,time b)
+int cmp(node a,node b)
 {
 	if(a.h==b.h)
 	{

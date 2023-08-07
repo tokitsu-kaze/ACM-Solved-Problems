@@ -1,19 +1,3 @@
-////////////////////System Comment////////////////////
-////Welcome to Hangzhou Dianzi University Online Judge
-////http://acm.hdu.edu.cn
-//////////////////////////////////////////////////////
-////Username: tokitsukaze
-////Nickname: tokitsukaze
-////Run ID: 
-////Submit time: 2017-03-05 14:40:14
-////Compiler: GUN C++
-//////////////////////////////////////////////////////
-////Problem ID: 2066
-////Problem Title: 
-////Run result: Accept
-////Run time:31MS
-////Run memory:5716KB
-//////////////////System Comment End//////////////////
 #include <iostream>
 #include <algorithm>
 #include <cstdio>
@@ -40,45 +24,45 @@ int flag[MAX];
 int n,s,d,si[MAX],di[MAX];
 void init()
 {
-	int i,j;
-	for(i=1;i<=MAX;i++)
-	{
-		flag[i]=0;
-		dis[i]=INF;
-		for(j=1;j<=MAX;j++)
-		{
-			edge[i][j]=INF;
-		}
-	}
+    int i,j;
+    for(i=1;i<=MAX;i++)
+    {
+        flag[i]=0;
+        dis[i]=INF;
+        for(j=1;j<=MAX;j++)
+        {
+            edge[i][j]=INF;
+        }
+    }
 }
 void spfa()
 {
-	int i,now;
-	queue<int> q;
-	for(i=0;i<s;i++)
-	{
-		dis[si[i]]=0;
-		flag[si[i]]=1;
-		q.push(si[i]);
-	}
-	while(!q.empty())
-	{
-		now=q.front();
-		q.pop();
-		flag[now]=0;
-		for(i=1;i<=n;i++)
-		{
-			if(dis[i]>dis[now]+edge[now][i])
-			{
-				dis[i]=dis[now]+edge[now][i];
-				if(!flag[i])
-				{
-					q.push(i);
-					flag[i]=1;
-				}
-			}
-		}
-	}
+    int i,now;
+    queue<int> q;
+    for(i=0;i<s;i++)
+    {
+        dis[si[i]]=0;
+        flag[si[i]]=1;
+        q.push(si[i]);
+    }
+    while(!q.empty())
+    {
+        now=q.front();
+        q.pop();
+        flag[now]=0;
+        for(i=1;i<=n;i++)
+        {
+            if(dis[i]>dis[now]+edge[now][i])
+            {
+                dis[i]=dis[now]+edge[now][i];
+                if(!flag[i])
+                {
+                    q.push(i);
+                    flag[i]=1;
+                }
+            }
+        }
+    }
 }
 int main()
 {
@@ -89,25 +73,25 @@ int main()
         n=0;
         while(t--)
         {
-			scanf("%d%d%d",&a,&b,&c);
-			n=max(n,max(a,b));
-			if(edge[a][b]>c) edge[a][b]=edge[b][a]=c;
-		}
-		for(i=0;i<s;i++)
-		{
-			scanf("%d",&si[i]);
-		}
-		for(i=0;i<d;i++)
-		{
-			scanf("%d",&di[i]);
-		}
-		spfa();
-		ans=INF;
-		for(i=0;i<d;i++)
-		{
-			ans=min(ans,dis[di[i]]);
-		}
-		cout<<ans<<endl;
+            scanf("%d%d%d",&a,&b,&c);
+            n=max(n,max(a,b));
+            if(edge[a][b]>c) edge[a][b]=edge[b][a]=c;
+        }
+        for(i=0;i<s;i++)
+        {
+            scanf("%d",&si[i]);
+        }
+        for(i=0;i<d;i++)
+        {
+            scanf("%d",&di[i]);
+        }
+        spfa();
+        ans=INF;
+        for(i=0;i<d;i++)
+        {
+            ans=min(ans,dis[di[i]]);
+        }
+        cout<<ans<<endl;
     }
     return 0;
 }

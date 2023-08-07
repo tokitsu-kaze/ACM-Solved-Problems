@@ -5,7 +5,7 @@ namespace fastIO{
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-//	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
+	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
 	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
@@ -45,6 +45,14 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
+	inline bool read_line(char *s){
+		char ch=nc();
+		for(;blank(ch);ch=nc());
+		if(IOerror)return false;
+		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
+		*s=0;
+		return true;
+	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
@@ -73,21 +81,43 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define debug(...) 233;
 #endif
 /*************  debug end  *************/
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #define mem(a,b) memset((a),(b),sizeof(a))
 #define MP make_pair
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
 typedef pair<ll,ll> PLL;
+typedef pair<int,ll> PIL;
+typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
+/************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
+void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -96,164 +126,88 @@ int main(){
 	go();return 0;
 }
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-struct ISAP
+struct Fenwick_Tree
 {
-	static const int N=100010;
-	struct node
-	{
-		int from,to,cap,flow;
-		node(){}
-		node(int u,int v,int c,int f):from(u),to(v),cap(c),flow(f){}
-	};
-	int p[N],num[N],cur[N],d[N];
-	int t,s,n;
-	bool vis[N];
-	vector<int> mp[N];
-	vector<node> edge;
+	#define type int
+	type bit[MAX];
+	int n;
 	void init(int _n)
 	{
 		n=_n;
-		for(int i=0;i<=n;i++)
-		{
-			mp[i].clear();
-			d[i]=INF;
-			vis[i]=num[i]=cur[i]=0;
-		}
-		edge.clear();
+		for(int i=0;i<=n;i++) bit[i]=0;
 	}
-	void add(int from,int to,int cap)
+	int lowbit(int x){return x&(-x);}
+	type get(int x)
 	{
-		edge.pb(node(from,to,cap,0));
-		edge.pb(node(to,from,cap,0));
-		int m=edge.size();
-		mp[from].pb(m-2);
-		mp[to].pb(m-1);
+		type res=0;
+		while(x)
+		{
+			res+=bit[x];
+			x-=lowbit(x);
+		}
+		return res;
 	}
-	bool bfs()
+	void upd(int x,type v)
 	{
-		queue<int> q;
-		d[t]=0;
-		vis[t]=1;
-		q.push(t);
-		while(!q.empty())
+		while(x<=n)
 		{
-			int u=q.front();
-			q.pop();
-			for(int i=0;i<mp[u].size();i++)
-			{
-				node &e=edge[mp[u][i]^1];
-				if(!vis[e.from]&&e.cap>e.flow)
-				{
-					vis[e.from]=true;
-					d[e.from]=d[u]+1;
-					q.push(e.from);
-				}
-			}
+			bit[x]+=v;
+			x+=lowbit(x);
 		}
-		return vis[s];
 	}
-	int augment()
+	type ask(int l,int r)
 	{
-		int u=t,flow=INF;
-		while(u!=s)
-		{
-			node &e=edge[p[u]];
-			flow=min(flow,e.cap-e.flow);
-			u=edge[p[u]].from;
-		}
-		u=t;
-		while(u!=s)
-		{
-			edge[p[u]].flow+=flow;
-			edge[p[u]^1].flow-=flow;
-			u=edge[p[u]].from;
-		}
-		return flow;
+		if(l>r) return 0;
+		if(l-1<=0) return get(r);
+		return get(r)-get(l-1);
 	}
-	int maxflow(int _s,int _t)
-	{
-		s=_s;
-		t=_t;
-		int flow=0;
-		bfs();
-		if(d[s]>=n) return 0;
-		for(int i=0;i<n;i++)
-		{
-			if(d[i]<INF) num[d[i]]++;
-		}
-		int u=s;
-		while(d[s]<n)
-		{
-			if(u==t)
-			{
-				flow+=augment();
-				u=s;
-			}
-			bool ok=false;
-			for(int i=cur[u];i<mp[u].size();i++)
-			{
-				node &e=edge[mp[u][i]];
-				if(e.cap>e.flow&&d[u]==d[e.to]+1)
-				{
-					ok=true;
-					p[e.to]=mp[u][i]; 
-					cur[u]=i;
-					u=e.to;
-					break;
-				}
-			}
-			if(!ok)
-			{
-				int mn=n-1;
-				for(int i=0;i<mp[u].size();i++)
-				{
-					node &e=edge[mp[u][i]];
-					if(e.cap>e.flow) mn=min(mn,d[e.to]);
-				}
-				if(--num[d[u]]==0) break;
-				num[d[u]=mn+1]++;
-				cur[u]=0;
-				if(u!=s) u=edge[p[u]].from;
-			}
-		}
-		return flow;
-	}
-}isap;
+	#undef type
+}tr;
+struct node{int l,r,id;};
+int a[MAX],p[MAX],ans[MAX];
 void go()
 {
-	int T,s,t,x,y,i,mx,mn,a,b,w,n,m;
-	read(T);
-	while(T--)
+	int t,n,i,j,top,q,l,r,sq,tmp;
+	read(t);
+	while(t--)
 	{
-		mn=INF;
-		mx=-INF;
-		read(n,m);
-		isap.init(n);
+		read(n);
+		read(a,1,n);
+		for(i=1;i<=n;i++) p[a[i]]=i;
+		read(q);
+		vector<node> qst(q);
+		for(i=0;i<q;i++)
+		{
+			read(qst[i].l,qst[i].r);
+			qst[i].id=i;
+		}
+		sort(all(qst),[&](node x,node y){
+			return x.r<y.r;
+		});
+		tr.init(n);
+		sq=sqrt(2*n+0.5);
+		top=0;
 		for(i=1;i<=n;i++)
 		{
-			read(x,y);
-			if(x<mn)
+			for(j=sqrt(a[i]+0.5);j<=sq;j++)
 			{
-				s=i;
-				mn=x;
+				tmp=j*j-a[i];
+				if(tmp<1) continue;
+				if(tmp>n) break;
+				if(p[tmp]<i) tr.upd(p[tmp],1);
 			}
-			if(x>mx)
+			while(top<q&&qst[top].r==i)
 			{
-				t=i;
-				mx=x;
+				ans[qst[top].id]=tr.ask(qst[top].l,i);
+				top++;
 			}
 		}
-		while(m--)
-		{
-			read(a,b,w);
-			isap.add(a,b,w);
-		}
-		printf("%d\n",isap.maxflow(s,t));
+		for(i=0;i<q;i++) printf("%d\n",ans[i]);
 	}
 }

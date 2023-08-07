@@ -113,8 +113,8 @@ int main()
 		}
 		pair<Point,double> res;
 		res=fermat(p);
-		printf("%.2lf %.2lf\n",res.first.x,res.first.y);
-	//	printf("%.2lf\n",res.second);
+		printf("%.2f %.2f\n",res.first.x,res.first.y);
+	//	printf("%.2f\n",res.second);
 	}
 	return 0;
 }

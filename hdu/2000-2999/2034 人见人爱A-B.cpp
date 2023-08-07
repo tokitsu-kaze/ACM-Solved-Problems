@@ -1,28 +1,5 @@
-////////////////////System Comment////////////////////
-////Welcome to Hangzhou Dianzi University Online Judge
-////http://acm.hdu.edu.cn
-//////////////////////////////////////////////////////
-////Username: tokitsukaze
-////Nickname: tokitsukaze
-////Run ID: 
-////Submit time: 2016-10-16 09:29:02
-////Compiler: GUN C++
-//////////////////////////////////////////////////////
-////Problem ID: 2034
-////Problem Title: 
-////Run result: Accept
-////Run time:0MS
-////Run memory:1412KB
-//////////////////System Comment End//////////////////
-#include <stdio.h>
-#include <string.h>
-int swap(int *a,int *b)
-{
-	int temp;
-	temp=*a;
-	*a=*b;
-	*b=temp;
-}
+#include <bits/stdc++.h>
+using namespace std;
 int main()
 {
     int m,n,a[101],b[101],c[101],i,j,k,flag;
@@ -58,7 +35,7 @@ int main()
 			{
 				for(j=0;j<k-1-i;j++)
 				{
-					if(c[j]>c[j+1]) swap(&c[j],&c[j+1]);
+					if(c[j]>c[j+1]) swap(c[j],c[j+1]);
 				}
 			}
 			for(i=0;i<k;i++)

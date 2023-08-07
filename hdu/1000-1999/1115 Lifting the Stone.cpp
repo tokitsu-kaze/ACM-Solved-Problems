@@ -78,7 +78,7 @@ int main()
 				scanf("%lf%lf",&p[i].x,&p[i].y);
 			}
 			ans=bcenter(p,n);
-			printf("%.2lf %.2lf\n",ans.x,ans.y);
+			printf("%.2f %.2f\n",ans.x,ans.y);
 		}
 	}
 	return 0;

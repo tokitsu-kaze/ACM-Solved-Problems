@@ -1,11 +1,11 @@
-﻿#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 namespace fastIO{
 	#define BUF_SIZE 100000
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-//	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
+	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
 	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
@@ -45,6 +45,14 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
+	inline bool read_line(char *s){
+		char ch=nc();
+		for(;blank(ch);ch=nc());
+		if(IOerror)return false;
+		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
+		*s=0;
+		return true;
+	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
@@ -78,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -90,6 +97,27 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
+/************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
+void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -98,131 +126,88 @@ int main(){
 	go();return 0;
 }
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-8;
-const int MAX=3e5+10;
+const double eps=1e-6;
+const int MAX=1e5+10;
 const ll mod=1e9+7;
-/*********************************head*********************************/
-struct KM
+/*********************************  head  *********************************/
+int n,m,k,cnt,ans;
+int pre[511];
+struct node
 {
-	#define type int
-	#define inf INF
-	static const int N=410;
-	int n,mx[N],my[N],prv[N];
-	type slk[N],lx[N],ly[N],w[N][N];
-	bool vx[N],vy[N];
-	void init(int _n)
+	int x,y,v;
+}a[25010];
+int cmp(node a,node b)
+{
+	return a.v<b.v;
+}
+void init()
+{
+	int i;
+	for(i=1;i<=n;i++)
 	{
-		n=_n;
-		for(int i=1;i<=n;i++)
-		{
-			for(int j=1;j<=n;j++)
-			{
-				w[i][j]=-inf;
-			}
-		}
+		pre[i]=i;
 	}
-	void add_edge(int x,int y,type val){w[x][y]=max(w[x][y],val);}
-	void match(int y){while(y) swap(y,mx[my[y]=prv[y]]);}
-	void bfs(int x)
+}
+int find(int x)
+{
+	if(pre[x]!=x) pre[x]=find(pre[x]);
+	return pre[x];
+}
+void merge(node a)
+{
+	int rx,ry;
+	rx=find(a.x);
+	ry=find(a.y);
+	if(rx!=ry)
 	{
-		int i,y;
-		type d;
-		for(i=1;i<=n;i++)
-		{
-			vx[i]=vy[i]=0;
-			slk[i]=inf;
-		}
-		queue<int> q;
-		q.push(x);
-		vx[x]=1;
-		while(1)
-		{
-			while(!q.empty())
-			{
-				x=q.front();
-				q.pop();
-				for(y=1;y<=n;y++)
-				{
-					d=lx[x]+ly[y]-w[x][y];
-					if(!vy[y]&&d<=slk[y])
-					{
-						prv[y]=x;
-						if(!d)
-						{
-							if(!my[y]) return match(y);
-							q.push(my[y]);
-							vx[my[y]]=1;
-							vy[y]=1;
-						}
-						else slk[y]=d;
-					}
-				}
-			}
-			d=inf+1;
-			for(i=1;i<=n;i++)
-			{
-				if(!vy[i]&&slk[i]<d)
-				{
-					d=slk[i];
-					y=i;
-				}
-			}
-			for(i=1;i<=n;i++)
-			{
-				if(vx[i]) lx[i]-=d;
-				if(vy[i]) ly[i]+=d;
-				else slk[i]-=d;
-			}
-			if(!my[y]) return match(y);
-			q.push(my[y]);
-			vx[my[y]]=1;
-			vy[y]=1;
-		}
+		pre[rx]=ry;
+		ans+=a.v;
 	}
-	type max_match()
+}
+void kruskal()
+{
+	int i;
+	sort(a,a+m,cmp);
+	for(i=0;i<m;i++)
 	{
-		int i;
-		type res;
-		for(i=1;i<=n;i++)
-		{
-			mx[i]=my[i]=ly[i]=0;
-			lx[i]=*max_element(w[i]+1,w[i]+n+1);
-		}
-		for(i=1;i<=n;i++) bfs(i);
-		res=0;
-		int cnt=0;
-		for(i=1;i<=n;i++)
-		{
-			if(lx[i]!=-inf) res+=lx[i];
-			else cnt++;
-			if(ly[i]!=-inf) res+=ly[i];
-		}
-		assert(cnt*2==n);
-		return -res;
+		merge(a[i]);
 	}
-	#undef type
-	#undef inf
-}km;
-/*
-O(n^3)
-km.init(n);
-km.add_edge(a,b,val); a,b: 1~n
-*/
+}
 void go()
 {
-	int n,m,a,b,x,t;
-	read(t);
-	while(t--)
-	{
-		read(n,m);
-		km.init(2*n);
-		while(m--)
+    int t,p,i,b,c;
+    while(read(t))
+    {
+		while(t--)
 		{
-			read(a,b,x);
-			km.add_edge(n+a,b,-x);
+			read(n,m,k);
+			init();
+			for(i=0;i<m;i++)
+			{
+				read(a[i].x,a[i].y,a[i].v);
+			}
+			
+			while(k--)
+			{
+				read(p,b);
+				p--;
+				while(p--)
+				{
+					read(c);
+					pre[find(b)]=find(c);
+					b=c;
+				}
+			}
+			cnt=ans=0;
+			kruskal();
+			for(i=1;i<=n;i++)
+			{
+				if(pre[i]==i) cnt++;
+			}
+			if(cnt!=1) puts("-1");
+			else printf("%d\n",ans);
 		}
-		printf("%d\n",km.max_match());
 	}
 }

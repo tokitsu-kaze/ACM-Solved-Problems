@@ -34,7 +34,7 @@ int main()
 			sum2+=s*d;
 		}
 		if(sum2==0) printf("-1\n");
-		else printf("%.2lf\n",sum2*1.0/sum1);
+		else printf("%.2f\n",sum2*1.0/sum1);
     }
     return 0;
 }

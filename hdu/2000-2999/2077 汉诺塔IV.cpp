@@ -17,19 +17,19 @@
 #include <stdio.h>
 int main ()  
 {
-    __int64 n,m,i,a[21];
+    long long n,m,i,a[25];
     a[0]=0;
     a[1]=2;
     for(i=2;i<=20;i++)
     {
 		a[i]=3*a[i-1]+2;
 	}
-    while(~scanf("%I64d",&n))
+    while(~scanf("%lld",&n))
 	{
 		while(n--)
 		{
-			scanf("%d",&m);
-			printf("%I64d\n",a[m-1]+2);
+			scanf("%lld",&m);
+			printf("%lld\n",a[m-1]+2);
 		}
 	}
     return 0;  

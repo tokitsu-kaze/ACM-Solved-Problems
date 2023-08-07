@@ -66,7 +66,7 @@ int main()
 			q.push(t[0]+t[1]);
 			ans+=t[0]+t[1];
 		}
-		printf("%d %d %.1lf\n",8*len,ans,8*len*1.0/ans);
+		printf("%d %d %.1f\n",8*len,ans,8*len*1.0/ans);
 	}
 	return 0;
 }

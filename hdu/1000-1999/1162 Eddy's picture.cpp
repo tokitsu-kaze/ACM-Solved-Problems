@@ -119,7 +119,7 @@ int main()
 				mp[i][j]=mp[j][i]=dist(p[i],p[j]);
 			}
 		}
-		printf("%.2lf\n",prim());
+		printf("%.2f\n",prim());
 	}
 	return 0;
 }

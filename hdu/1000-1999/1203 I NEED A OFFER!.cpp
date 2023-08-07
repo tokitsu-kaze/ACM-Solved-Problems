@@ -52,7 +52,7 @@ int main()
 				dp[j]=min(dp[j],dp[j-a[i]]*(1-b[i]));
 			}
 		}
-		printf("%.1lf%%\n",(1-dp[n])*100);
+		printf("%.1f%%\n",(1-dp[n])*100);
 	} 
     return 0;
 }

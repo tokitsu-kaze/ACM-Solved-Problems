@@ -71,8 +71,8 @@ int main()
 				scanf("%d-%d",&a,&b);
 				vis[a]++;
 				vis[b]++;
-				mp[a][b]++;
-				mp[b][a]++;
+				mp[a][b]=1;
+				mp[b][a]=1;
 			}
 			for(j=1;j<=n;j++)
 			{

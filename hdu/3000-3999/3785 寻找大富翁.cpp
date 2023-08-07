@@ -132,19 +132,25 @@ const double eps=1e-6;
 const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-void go()
+int a[MAX];
+int cmp(int a,int b)
 {
-	int n,i,ans,x;
-	while(read(n))
-	{
-		map<int,int> mp;
-		ans=0;
-		for(i=0;i<n;i++)
-		{
-			read(x);
-			mp[x]++;
-			ans=max(ans,mp[x]);
-		}
-		printf("%d\n",ans);
-	}
+	return a>b;
 }
+void go()
+{ 
+	int i,n,m;
+    while(read(n,m))
+	{  
+		if(n+m==0) break;
+        for(i=0;i<n;i++) read(a[i]);
+		sort(a,a+n,cmp);
+		if(n<m) m=n;
+		for(i=0;i<m;i++)
+		{
+			printf("%d",a[i]);
+			if(i!=m-1) printf(" ");
+			else puts("");
+		}
+    }
+}  

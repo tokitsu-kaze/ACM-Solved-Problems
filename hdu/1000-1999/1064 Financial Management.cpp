@@ -25,6 +25,6 @@ int main()
 		s=s+a[i];
 		i++;
     }
-	printf("$%.2lf\n",s/12);
+	printf("$%.2f\n",s/12);
 	return 0;
 }
