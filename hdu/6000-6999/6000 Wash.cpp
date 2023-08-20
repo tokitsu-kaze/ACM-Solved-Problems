@@ -129,163 +129,59 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e3+10;
+const int MAX=1e6+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int scc,top,idx;
-vector<int> mp[MAX];
-int low[MAX],dfn[MAX],belong[MAX];
-int stk[MAX],vis[MAX];
-void init(int n)
+struct node
 {
-	int i;
-	for(i=0;i<n;i++)
+	ll v,temp;
+	node(){}
+	node(ll a,ll b)
 	{
-		mp[i].clear();
-		low[i]=0;
-		dfn[i]=0;
-		stk[i]=0;
-		vis[i]=0;
-		belong[i]=0;
+		v=a;
+		temp=b;
 	}
-	scc=top=idx=0;
-}
-void tarjan(int x)
-{
-	int to,i,temp;
-	stk[top++]=x;
-	vis[x]=1;
-	low[x]=dfn[x]=++idx;
-	for(i=0;i<sz(mp[x]);i++)
+	friend bool operator<(const node &a,const node &b)
 	{
-		to=mp[x][i];
-		if(!dfn[to])
-		{
-			tarjan(to);
-			low[x]=min(low[x],low[to]);
-		}
-		else if(vis[to]) low[x]=min(low[x],dfn[to]);
+		return a.v>b.v;
 	}
-	if(low[x]==dfn[x])
-	{
-		scc++;
-		do
-		{
-			temp=stk[--top];
-			vis[temp]=0;
-			belong[temp]=scc;
-		}while(temp!=x);
-	}
-}
-void add(int x,int y)
-{
-	mp[x].pb(y);
-}
-int two_sat(int n)
-{
-	int i;
-	for(i=0;i<2*n;i++)
-	{
-		if(!dfn[i]) tarjan(i);
-	}
-	for(i=0;i<n;i++)
-	{
-		if(belong[i]==belong[i+n]) return 1;
-	}
-	return 0;
-}
-int g[510][510];
+};
+ll res[MAX];
 void go()
 {
-	int i,j,k,flag,n;
-	while(read(n))
+	ll t,i,a,b,c,cas=1;
+	ll x;
+	read(t);
+	while(t--)
 	{
-		for(i=0;i<n;i++)
+		read(a,b,c);
+		priority_queue<node> q1,q2;
+		for(i=1;i<=b;i++)
 		{
-			for(j=0;j<n;j++)
-			{
-				read(g[i][j]);
-			}
+			read(x);
+			q1.push(node(x,x));
 		}
-		if(n==1)
+		for(i=1;i<=c;i++)
 		{
-			puts("YES");
-			continue;
+			read(x);
+			q2.push(node(x,x));
 		}
-		flag=0;
-		for(i=0;i<n;i++)
+		printf("Case #%lld: ",cas++);
+		ll ans=0;
+		for(i=a;i>=1;i--)
 		{
-			if(g[i][i]) flag=1;
+			node temp1=q1.top();
+			q1.pop();
+			res[i]=temp1.v;
+			q1.push(node(res[i]+temp1.temp,temp1.temp));
 		}
-		for(i=0;i<n;i++)
+		for(i=1;i<=a;i++)
 		{
-			for(j=i+1;j<n;j++)
-			{
-				if(g[i][j]!=g[j][i]) flag=1;
-			}
+			node temp2=q2.top();
+			q2.pop();
+			ans=max(ans,res[i]+temp2.v);
+			q2.push(node(temp2.v+temp2.temp,temp2.temp));
 		}
-		if(flag)
-		{
-			puts("NO");
-			continue;
-		}
-		for(k=0;k<=30;k++)
-		{
-			init(2*n);
-			for(i=0;i<n;i++)
-			{
-				for(j=i+1;j<n;j++)
-				{
-					int tag=(g[i][j]>>k)&1;
-					if(i%2&&j%2)
-					{
-						if(tag)
-						{
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,i+n);
-							add(j,j+n);
-						}
-					}
-					else if(i%2==0&&j%2==0)
-					{
-						if(tag)
-						{
-							add(i+n,i);
-							add(j+n,j);
-						}
-						else
-						{
-							add(j,i+n);
-							add(i,j+n);
-						}
-					}
-					else
-					{
-						if(tag)
-						{
-							add(i,j+n);
-							add(j,i+n);
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,j);
-							add(j,i);
-							add(i+n,j+n);
-							add(j+n,i+n);
-						}
-					}
-				}
-			}
-			flag=two_sat(n);
-			if(flag) break;
-		}
-		if(flag) puts("NO");
-		else puts("YES");
+		printf("%lld\n",ans);
 	}
 }

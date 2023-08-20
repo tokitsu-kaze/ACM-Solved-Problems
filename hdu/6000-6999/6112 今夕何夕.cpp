@@ -14,7 +14,9 @@
 ////Run time:15MS
 ////Run memory:1716KB
 //////////////////System Comment End//////////////////
-#include <bits/stdc++.h>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
 #define mem(a,b) memset((a),(b),sizeof(a))
 #define MP make_pair
 #define pb push_back

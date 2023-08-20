@@ -129,163 +129,132 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e3+10;
+const int MAX=1e5+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int scc,top,idx;
-vector<int> mp[MAX];
-int low[MAX],dfn[MAX],belong[MAX];
-int stk[MAX],vis[MAX];
-void init(int n)
+struct node
 {
-	int i;
-	for(i=0;i<n;i++)
+	ll l,r,mid,sum,tag;
+	node(){}
+	node(ll a,ll b)
 	{
-		mp[i].clear();
-		low[i]=0;
-		dfn[i]=0;
-		stk[i]=0;
-		vis[i]=0;
-		belong[i]=0;
+		l=a;
+		r=b;
+		sum=0;
+		tag=0;
+		mid=(l+r)>>1;
 	}
-	scc=top=idx=0;
-}
-void tarjan(int x)
+}tr[4*MAX];
+ll a[MAX];
+void build(ll l,ll r,ll id)
 {
-	int to,i,temp;
-	stk[top++]=x;
-	vis[x]=1;
-	low[x]=dfn[x]=++idx;
+	ll mid;
+	tr[id]=node(l,r);
+	if(l==r)
+	{ 
+		tr[id].sum=a[l];
+		return;
+	}
+	mid=tr[id].mid;
+	build(l,mid,id<<1);
+	build(mid+1,r,id<<1|1);
+	tr[id].sum=max(tr[id<<1].sum,tr[id<<1|1].sum);
+}
+void pushdown(ll id)
+{
+	tr[id<<1].tag+=tr[id].tag;
+	tr[id<<1|1].tag+=tr[id].tag;
+	tr[id<<1].sum+=tr[id].tag;
+	tr[id<<1|1].sum+=tr[id].tag;
+	tr[id].tag=0;
+}
+void update(ll l,ll r,ll id,ll v)
+{
+	ll mid;
+	if(l<=tr[id].l&&r>=tr[id].r)
+	{
+		tr[id].sum+=v;
+		tr[id].tag+=v;
+		return;
+	}
+	if(tr[id].tag) pushdown(id);
+	mid=tr[id].mid;
+	if(r<=mid) update(l,r,id<<1,v);
+	else if(l>=mid+1) update(l,r,id<<1|1,v);
+	else
+	{
+		update(l,mid,id<<1,v);
+		update(mid+1,r,id<<1|1,v);
+	}
+	tr[id].sum=max(tr[id<<1].sum,tr[id<<1|1].sum);
+}
+ll query(ll l,ll r,ll id)
+{
+	ll mid;
+	if(l==tr[id].l&&r==tr[id].r)
+	{
+		return tr[id].sum;
+	}
+	if(tr[id].tag) pushdown(id);
+	mid=tr[id].mid;
+	if(r<=mid) return query(l,r,id<<1);
+	else if(l>=mid+1) return query(l,r,id<<1|1);
+	else return max(query(l,mid,id<<1),query(mid+1,r,id<<1|1));
+}
+vector<ll> mp[MAX];
+ll v[MAX],tot,l[MAX],r[MAX],dis[MAX];
+void dfs(ll x,ll pre)
+{
+	ll i,to;
+	if(pre!=-1) dis[x]+=dis[pre];
+	dis[x]+=v[x];
+	tot++;
+	l[x]=tot;
+	a[tot]=dis[x];
 	for(i=0;i<sz(mp[x]);i++)
 	{
 		to=mp[x][i];
-		if(!dfn[to])
-		{
-			tarjan(to);
-			low[x]=min(low[x],low[to]);
-		}
-		else if(vis[to]) low[x]=min(low[x],dfn[to]);
+		if(to==pre) continue;
+		dfs(to,x);
 	}
-	if(low[x]==dfn[x])
-	{
-		scc++;
-		do
-		{
-			temp=stk[--top];
-			vis[temp]=0;
-			belong[temp]=scc;
-		}while(temp!=x);
-	}
+	r[x]=tot;
 }
-void add(int x,int y)
-{
-	mp[x].pb(y);
-}
-int two_sat(int n)
-{
-	int i;
-	for(i=0;i<2*n;i++)
-	{
-		if(!dfn[i]) tarjan(i);
-	}
-	for(i=0;i<n;i++)
-	{
-		if(belong[i]==belong[i+n]) return 1;
-	}
-	return 0;
-}
-int g[510][510];
 void go()
 {
-	int i,j,k,flag,n;
-	while(read(n))
+	ll t,n,m,i,c,d,op,x,y,cas=1;
+	read(t);
+	while(t--)
 	{
-		for(i=0;i<n;i++)
+		read(n,m);
+		for(i=1;i<=n;i++) mp[i].clear();
+		for(i=0;i<n-1;i++)
 		{
-			for(j=0;j<n;j++)
+			read(c,d);
+			c++;
+			d++;
+			mp[c].pb(d);
+			mp[d].pb(c);
+		}
+		for(i=1;i<=n;i++) read(v[i]);
+		tot=0;
+		mem(dis,0);
+		dfs(1,0);
+		build(1,n,1);
+		printf("Case #%lld:\n",cas++);
+		while(m--)
+		{
+			read(op,x);
+			x++;
+			if(op==0)
 			{
-				read(g[i][j]);
+				read(y);
+				update(l[x],r[x],1,y-v[x]);
+				v[x]=y;
+			}
+			else if(op==1)
+			{
+				printf("%lld\n",query(l[x],r[x],1));
 			}
 		}
-		if(n==1)
-		{
-			puts("YES");
-			continue;
-		}
-		flag=0;
-		for(i=0;i<n;i++)
-		{
-			if(g[i][i]) flag=1;
-		}
-		for(i=0;i<n;i++)
-		{
-			for(j=i+1;j<n;j++)
-			{
-				if(g[i][j]!=g[j][i]) flag=1;
-			}
-		}
-		if(flag)
-		{
-			puts("NO");
-			continue;
-		}
-		for(k=0;k<=30;k++)
-		{
-			init(2*n);
-			for(i=0;i<n;i++)
-			{
-				for(j=i+1;j<n;j++)
-				{
-					int tag=(g[i][j]>>k)&1;
-					if(i%2&&j%2)
-					{
-						if(tag)
-						{
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,i+n);
-							add(j,j+n);
-						}
-					}
-					else if(i%2==0&&j%2==0)
-					{
-						if(tag)
-						{
-							add(i+n,i);
-							add(j+n,j);
-						}
-						else
-						{
-							add(j,i+n);
-							add(i,j+n);
-						}
-					}
-					else
-					{
-						if(tag)
-						{
-							add(i,j+n);
-							add(j,i+n);
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,j);
-							add(j,i);
-							add(i+n,j+n);
-							add(j+n,i+n);
-						}
-					}
-				}
-			}
-			flag=two_sat(n);
-			if(flag) break;
-		}
-		if(flag) puts("NO");
-		else puts("YES");
 	}
-}
+} 

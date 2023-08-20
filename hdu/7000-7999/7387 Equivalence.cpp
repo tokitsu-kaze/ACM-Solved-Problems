@@ -121,7 +121,7 @@ void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"
 void go();
 int main(){
 	#ifdef tokitsukaze
-		freopen("TEST.txt","r",stdin);
+		freopen("test.in","r",stdin);
 	#endif
 	go();return 0;
 }
@@ -129,163 +129,112 @@ const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e3+10;
+const int MAX=1e6+10;
 const ll mod=1e9+7;
 /*********************************  head  *********************************/
-int scc,top,idx;
-vector<int> mp[MAX];
-int low[MAX],dfn[MAX],belong[MAX];
-int stk[MAX],vis[MAX];
-void init(int n)
+struct LCA
 {
-	int i;
-	for(i=0;i<n;i++)
+	static const int N=MAX;
+	static const int LOGN=log2(N)+3;
+	int fa[N][LOGN],dep[N],limt,bin[LOGN];
+	void dfs(int x,int pre,vector<int> mp[])
 	{
-		mp[i].clear();
-		low[i]=0;
-		dfn[i]=0;
-		stk[i]=0;
-		vis[i]=0;
-		belong[i]=0;
-	}
-	scc=top=idx=0;
-}
-void tarjan(int x)
-{
-	int to,i,temp;
-	stk[top++]=x;
-	vis[x]=1;
-	low[x]=dfn[x]=++idx;
-	for(i=0;i<sz(mp[x]);i++)
-	{
-		to=mp[x][i];
-		if(!dfn[to])
+		int i;
+		for(i=1;bin[i]<=dep[x];i++) fa[x][i]=fa[fa[x][i-1]][i-1];
+		for(auto &to:mp[x])
 		{
-			tarjan(to);
-			low[x]=min(low[x],low[to]);
+			if(to==pre) continue;
+			dep[to]=dep[x]+1;
+			fa[to][0]=x;
+			dfs(to,x,mp);
 		}
-		else if(vis[to]) low[x]=min(low[x],dfn[to]);
 	}
-	if(low[x]==dfn[x])
+	void work(int n,int root,vector<int> mp[])
 	{
-		scc++;
-		do
+		int i;
+		for(limt=1;(1<<(limt-1))<n;limt++);
+		for(i=bin[0]=1;i<=limt;i++) bin[i]=(bin[i-1]<<1);
+		for(i=0;i<=n;i++) memset(fa[i],0,sizeof fa[i]);
+		dep[root]=0;
+		dfs(root,-1,mp);
+	}
+	int go(int x,int d)
+	{
+		for(int i=0;i<=limt&&d;i++)
 		{
-			temp=stk[--top];
-			vis[temp]=0;
-			belong[temp]=scc;
-		}while(temp!=x);
+			if(bin[i]&d)
+			{
+				d^=bin[i];
+				x=fa[x][i];
+			}
+		}
+		return x;
 	}
-}
-void add(int x,int y)
-{
-	mp[x].pb(y);
-}
-int two_sat(int n)
-{
-	int i;
-	for(i=0;i<2*n;i++)
+	int lca(int x,int y)
 	{
-		if(!dfn[i]) tarjan(i);
+		if(dep[x]<dep[y]) swap(x,y);
+		x=go(x,dep[x]-dep[y]);
+		if(x==y) return x;
+		for(int i=limt;~i;i--)
+		{
+			if(fa[x][i]!=fa[y][i])
+			{
+				x=fa[x][i];
+				y=fa[y][i];
+			}
+		}
+		return fa[x][0];
 	}
-	for(i=0;i<n;i++)
+}lca;
+/*
+O(nlogn)-O(logn)
+lca.work(n,root,mp);
+*/
+VI mp[MAX];
+int p1[MAX],p2[MAX],v[MAX];
+int cnt[MAX];
+void dfs(int x,int fa)
+{
+	for(auto &to:mp[x])
 	{
-		if(belong[i]==belong[i+n]) return 1;
+		if(to==fa) continue;
+		dfs(to,x);
+		cnt[x]+=cnt[to];
 	}
-	return 0;
 }
-int g[510][510];
 void go()
 {
-	int i,j,k,flag,n;
-	while(read(n))
+	int t,n,i,ans;
+	read(t);
+	while(t--)
 	{
-		for(i=0;i<n;i++)
+		read(n);
+		for(i=1;i<=n;i++)
 		{
-			for(j=0;j<n;j++)
-			{
-				read(g[i][j]);
-			}
+			mp[i].clear();
+			cnt[i]=0;
 		}
-		if(n==1)
+		for(i=2;i<=n;i++)
 		{
-			puts("YES");
-			continue;
+			read(p1[i]);
+			mp[p1[i]].pb(i);
+			mp[i].pb(p1[i]);
 		}
-		flag=0;
-		for(i=0;i<n;i++)
+		read(v,2,n);
+		read(p2,2,n);
+		lca.work(n,1,mp);
+		for(i=2;i<=n;i++)
 		{
-			if(g[i][i]) flag=1;
+			cnt[p2[i]]++;
+			cnt[i]++;
+			cnt[lca.lca(i,p2[i])]-=2;
 		}
-		for(i=0;i<n;i++)
+		dfs(1,0);
+		ans=0;
+		for(i=2;i<=n;i++)
 		{
-			for(j=i+1;j<n;j++)
-			{
-				if(g[i][j]!=g[j][i]) flag=1;
-			}
+			if(v[i]&&cnt[i]>1) ans++;
 		}
-		if(flag)
-		{
-			puts("NO");
-			continue;
-		}
-		for(k=0;k<=30;k++)
-		{
-			init(2*n);
-			for(i=0;i<n;i++)
-			{
-				for(j=i+1;j<n;j++)
-				{
-					int tag=(g[i][j]>>k)&1;
-					if(i%2&&j%2)
-					{
-						if(tag)
-						{
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,i+n);
-							add(j,j+n);
-						}
-					}
-					else if(i%2==0&&j%2==0)
-					{
-						if(tag)
-						{
-							add(i+n,i);
-							add(j+n,j);
-						}
-						else
-						{
-							add(j,i+n);
-							add(i,j+n);
-						}
-					}
-					else
-					{
-						if(tag)
-						{
-							add(i,j+n);
-							add(j,i+n);
-							add(i+n,j);
-							add(j+n,i);
-						}
-						else
-						{
-							add(i,j);
-							add(j,i);
-							add(i+n,j+n);
-							add(j+n,i+n);
-						}
-					}
-				}
-			}
-			flag=two_sat(n);
-			if(flag) break;
-		}
-		if(flag) puts("NO");
-		else puts("YES");
+		printf("%d\n",ans);
 	}
 }
