@@ -214,7 +214,7 @@ struct MCMF_dij
 int a[2020];
 void go()
 {
-    int t,n,i,j,k,S1,S2,T;
+    int t,n,i,j,k,S1,S2,T,cnt;
     read(t);
     while(t--)
     {
@@ -230,9 +230,14 @@ void go()
             mcmf.add_edge(S2,i*2-1,1,0);
             mcmf.add_edge(i*2-1,i*2,1,-a[i]);
             mcmf.add_edge(i*2,T,1,0);
-            for(j=i+1;j<=n;j++)
+            cnt=0;
+            for(j=i+1;j<=n&&cnt<100;j++)
             {
-                if(a[i]<=a[j]) mcmf.add_edge(i*2,j*2-1,1,0);
+                if(a[i]<=a[j])
+                {
+                	mcmf.add_edge(i*2,j*2-1,1,0);
+                	cnt++;
+				}
             }
         }
         printf("%d\n",-mcmf.mincost_maxflow(S1,T).fi);

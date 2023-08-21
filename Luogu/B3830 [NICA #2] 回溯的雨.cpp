@@ -5,7 +5,7 @@ namespace fastIO{
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;}
+	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
 	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
@@ -45,10 +45,18 @@ namespace fastIO{
 		*s=0;
 		return true;
 	}
+	inline bool read_line(char *s){
+		char ch=nc();
+		for(;blank(ch);ch=nc());
+		if(IOerror)return false;
+		for(;ch!='\n'&&!IOerror;ch=nc())*s++=ch;
+		*s=0;
+		return true;
+	}
 	inline bool read(char &c){
 		for(c=nc();blank(c);c=nc());
 		if(IOerror){c=-1;return false;}
-		return true;
+		return true; 
 	}
 	template<class T,class... U>bool read(T& h,U&... t){return read(h)&&read(t...);}
 	#undef OUT_SIZE
@@ -67,7 +75,7 @@ template<class A>string to_string(const vector<A> v){
 }
 void debug_out(){puts("");}
 template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<to_string(h);debug_out(t...);}
-#ifdef tokitsukaze
+#ifdef tokitsukaze 
 #define debug(...) cout<<"["<<#__VA_ARGS__<<"]:",debug_out(__VA_ARGS__);
 #else
 #define debug(...) 233;
@@ -78,10 +86,9 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define pb push_back
 #define fi first
 #define se second
-#define sz(x) (int)x.size()
+#define sz(x) ((int)x.size())
 #define all(x) x.begin(),x.end()
-#define sqr(x) (x)*(x)
-using namespace __gnu_cxx;
+#define sqr(x) ((x)*(x))
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
@@ -90,7 +97,19 @@ typedef pair<int,ll> PIL;
 typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+typedef vector<PII> VPII;
+typedef vector<PLL> VPLL;
+typedef vector<string> VS;
+typedef vector<VI> VVI;
+typedef vector<VL> VVL;
+typedef vector<VS> VVS;
+typedef vector<VPII> VVPII;
 /************* define end  *************/
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+/********* gp_hash_table end  **********/
 void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
 void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
@@ -109,110 +128,39 @@ int main(){
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-8;
-const int MAX=3e5+10;
-const int mod=1e9+7;
+const double eps=1e-6;
+const int MAX=1e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-struct Palindrome_Tree
-{
-	int len[MAX],next[MAX][26],fail[MAX],last,s[MAX],tot,n;
-	int cnt[MAX],deep[MAX];
-	int be[MAX],en[MAX];
-	int newnode(int l)
-	{
-		mem(next[tot],0);
-		fail[tot]=0; 
-		deep[tot]=cnt[tot]=0;
-		len[tot]=l;
-		be[tot]=en[tot]=-1;
-		return tot++;
-	}
-	void init()
-	{
-		tot=n=last=0;
-		newnode(0);
-		newnode(-1);
-		s[0]=-1;
-		fail[0]=1;
-	}
-	int get_fail(int x)
-	{
-		while(s[n-len[x]-1]!=s[n]) x=fail[x];
-		return x;
-	}
-	void add(int t,int pos)//attention the type of t is int
-	{
-		int id,now;
-		s[++n]=t;
-		now=get_fail(last);
-		if(!next[now][t])
-		{
-			id=newnode(len[now]+2);
-			fail[id]=next[get_fail(fail[now])][t];
-			deep[id]=deep[fail[id]]+1;
-			next[now][t]=id;
-		}
-		last=next[now][t];
-		en[last]=pos;
-		be[last]=en[last]-len[last]+1;
-		cnt[last]++;
-	}
-	void count()
-	{
-		for(int i=tot-1;~i;i--) cnt[fail[i]]+=cnt[i];
-	}
-}pam; //pam.init(); 
-char s[MAX];
-struct hash_table
-{
-	ull seed;
-	ull Hash[MAX],tmp[MAX];
-	void set(ull _seed)
-	{
-		seed=_seed;
-	}
-	void work(char *s,int n)
-	{
-		tmp[0]=1;
-		Hash[0]=0;
-		for(int i=1;i<=n;i++)
-		{
-			tmp[i]=tmp[i-1]*seed;
-			Hash[i]=(Hash[i-1]*seed+(s[i]-'a'));//may need change
-		}
-	}
-	ull get(int l,int r)
-	{
-		return Hash[r]-Hash[l-1]*tmp[r-l+1];
-	}
-}pre,suf;
-ll ans[MAX];
+ll c[MAX],y[MAX];
 void go()
 {
-	int n,i,l,r,mid;
-	while(read(s+1))
+	int n,i;
+	ll x,mn,ans;
+	while(read(n,x))
 	{
-		pam.init();
-		n=strlen(s+1);
+		read(c,1,n);
+		mn=LLINF;
 		for(i=1;i<=n;i++)
 		{
-			pam.add(s[i]-'a',i);
-			ans[i]=0;
+			y[i]=c[i]-c[i]/x*x;
+			mn=min(mn,c[i]/x-1);
 		}
-		pam.count();
-		mt19937 rd(time(0));
-		pre.set(rd());
-		pre.work(s,n);
-		reverse(s+1,s+1+n);
-		suf.set(pre.seed);
-		suf.work(s,n);
-		for(i=2;i<pam.tot;i++)
+		sort(y+1,y+1+n);
+		ans=y[1]+mn*x;
+		for(i=1;i<=n;i++)
 		{
-			l=pam.be[i];
-			r=pam.en[i];
-			mid=(l+r)>>1;
-			if(l>mid||pre.get(l,mid)==suf.get(n-mid+1,n-l+1)) ans[r-l+1]+=pam.cnt[i];
+			if(c[i]<=x)
+			{
+				ans=-1;
+				break;
+			}
+			if((y[i]-y[1])%x)
+			{
+				ans=-1;
+				break;
+			}
 		}
-		println(ans,1,n);
+		printf("%lld\n",ans);
 	}
 }
