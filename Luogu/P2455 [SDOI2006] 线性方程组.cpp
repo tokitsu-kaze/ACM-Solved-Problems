@@ -64,7 +64,7 @@ struct Gauss
 	}
 }gs;
 /*
-gs.work(n,m,mp,res); mp[1..n][1..m+1], res[1..m]
+gs.work(n,m,res); mp[1..n][1..m+1], res[1..m]
 
 -1: no solution
 0 : one solution
