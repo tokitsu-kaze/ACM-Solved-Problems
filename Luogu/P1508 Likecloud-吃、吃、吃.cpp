@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+int mp[205][205],dp[205][205];
+int main()
+{
+	int n,m,i,j;
+	scanf("%d%d",&n,&m);
+	for(i=1;i<=n;i++)
+	{
+		for(j=1;j<=m;j++)
+		{
+			scanf("%d",&mp[i][j]);
+		}
+	}
+	memset(dp[0],0,sizeof dp[0]);
+	for(i=1;i<=n;i++)
+	{
+		for(j=1;j<=m;j++)
+		{
+			dp[i][j]=max({dp[i-1][j-1],
+						  dp[i-1][j],
+						  dp[i-1][j+1]})+mp[i][j];
+		}
+	}
+	printf("%d\n",max({dp[n][(m+1)/2],
+					   dp[n][(m+1)/2-1],
+					   dp[n][(m+1)/2+1]}));
+	return 0;
+}
