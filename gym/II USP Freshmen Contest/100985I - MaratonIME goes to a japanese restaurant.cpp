@@ -5,7 +5,7 @@ namespace fastIO{
 	#define OUT_SIZE 100000
 	//fread->read
 	bool IOerror=0;
-//	inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
+	//inline char nc(){char ch=getchar();if(ch==-1)IOerror=1;return ch;} 
 	inline char nc(){
 		static char buf[BUF_SIZE],*p1=buf+BUF_SIZE,*pend=buf+BUF_SIZE;
 		if(p1==pend){
@@ -73,7 +73,6 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define debug(...) 233;
 #endif
 /*************  debug end  *************/
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #define mem(a,b) memset((a),(b),sizeof(a))
 #define MP make_pair
 #define pb push_back
@@ -81,104 +80,70 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define se second
 #define sz(x) (int)x.size()
 #define all(x) x.begin(),x.end()
+#define sqr(x) (x)*(x)
 using namespace __gnu_cxx;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
 typedef pair<ll,ll> PLL;
+typedef pair<int,ll> PIL;
+typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+typedef vector<PII > VPII;
+/************* define end  *************/
+void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
 void go();
 int main(){
-    #ifdef tokitsukaze
-        freopen("TEST.txt","r",stdin);
-    #endif
-    go();return 0;
+	#ifdef tokitsukaze
+		freopen("TEST.txt","r",stdin);
+	#endif
+	go();return 0;
 }
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
-const double eps=1e-8;
-const int MAX=1e5+10;
-const ll mod=1e9+7;
+const double eps=1e-6;
+const int MAX=2e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
-char mp[22][22];
-int dir[4][2]={0,1,1,0,0,-1,-1,0};
-const string tmp="RDLU";
-int pos[22][22][22][22];
-PII to(PII now,int d)
-{
-	int x,y;
-	x=now.fi+dir[d][0];
-	y=now.se+dir[d][1];
-	if(mp[x][y]=='0') return now;
-	else return MP(x,y);
-}
-void dfs(PII s,PII now,int d)
-{
-	if(pos[s.fi][s.se][now.fi][now.se]!=-1) return;
-	pos[s.fi][s.se][now.fi][now.se]=d;
-	PII nex;
-	for(int i=0;i<4;i++)
-	{
-		nex=to(now,i);
-		if(nex==s||nex==now) continue;
-		dfs(s,nex,d);
-	}
-}
-bool flag[22][22];
+int a[MAX];
 void go()
 {
-	int n,m,i,j,k,d,x;
-	while(read(n,m))
+	int n,t,i,cnt[2],now;
+	while(read(n,t))
 	{
-		mem(pos,-1);
-		mem(mp,'0');
-		vector<PII > res[2];
+		read(a,1,n);
+		mem(cnt,0);
+		now=0;
 		for(i=1;i<=n;i++)
 		{
-			read(mp[i]+1);
-			mp[i][0]=mp[i][m+1]='0';
-		}
-		x=0;
-		for(i=1;i<=n;i++)
-		{
-			for(j=1;j<=m;j++)
+			now+=a[i];
+			if(now>t)
 			{
-				if(mp[i][j]=='0') continue;
-				for(k=0;k<4;k++)
-				{
-					if(to(MP(i,j),k)==MP(i,j)) continue;
-					dfs(MP(i,j),to(MP(i,j),k),k);
-				}
-				res[x].pb(MP(i,j));
+				cnt[0]=i-1;
+				break;
 			}
 		}
-		
-		string ans="";
-		PII a,b;
-		while(sz(res[x])>1)
+		now=0;
+		for(i=n;i;i--)
 		{
-			a=res[x][0];
-			b=res[x][1];
-			while(a!=b)
+			now+=a[i];
+			if(now>t)
 			{
-				d=pos[a.fi][a.se][b.fi][b.se];
-				res[x^1].clear();
-				mem(flag,0);
-				for(auto &it:res[x])
-				{
-					it=to(it,d);
-					if(flag[it.fi][it.se]) continue;
-					flag[it.fi][it.se]=1;
-					res[x^1].pb(it);
-				}
-				x^=1;
-				a=to(a,d);
-				b=to(b,d);
-				ans+=tmp[d];
+				cnt[1]=n-i;
+				break;
 			}
 		}
-		cout<<ans<<"\n";
+		if(cnt[0]>cnt[1]) puts("Yan");
+		else if(cnt[0]<cnt[1]) puts("Nathan");
+		else puts("Empate");
 	}
 }
