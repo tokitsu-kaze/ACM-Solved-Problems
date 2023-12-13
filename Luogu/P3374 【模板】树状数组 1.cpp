@@ -12,6 +12,15 @@ struct Fenwick_Tree
 		n=_n;
 		for(int i=0;i<=n;i++) bit[i]=0;
 	}
+	void init(int _n,type *a)
+	{
+		n=_n;
+		for(int i=1;i<=n;i++)
+		{
+			a[i]+=a[i-1];
+			bit[i]=a[i]-a[i-lowbit(i)];
+		}
+	}
 	int lowbit(int x){return x&(-x);}
 	type get(int x)
 	{
@@ -38,16 +47,13 @@ struct Fenwick_Tree
 	}
 	#undef type
 }tr;
+ll a[MAX];
 int main()
 {
 	int n,q,op,x,y,i;
 	scanf("%d%d",&n,&q);
-	tr.init(n);
-	for(i=1;i<=n;i++)
-	{
-		scanf("%d",&x);
-		tr.upd(i,x);
-	}
+	for(i=1;i<=n;i++) scanf("%lld",&a[i]);
+	tr.init(n,a);
 	while(q--)
 	{
 		scanf("%d%d%d",&op,&x,&y);
