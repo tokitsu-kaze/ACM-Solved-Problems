@@ -11,31 +11,39 @@ ll exgcd(ll a,ll b,ll &x,ll &y)
 		y=0;
 		return a;
 	}
-	ll g,t;
+	ll g,tmp;
 	g=exgcd(b,a%b,x,y);
-	t=x;
+	tmp=x;
 	x=y;
-	y=t-a/b*y;
+	y=tmp-a/b*y;
 	return g;
 }
+/*
+xa+yb=gcd(a,b)
+
+get x,y
+x1=x+b/gcd(a,b)*t
+y1=y-a/gcd(a,b)*t
+t is any integer
+*/
 ll linear_equation(ll a,ll b,ll c,ll &x,ll &y)
 {
-	ll g,t;
+	
+	ll g,dx,dy,t;
 	g=exgcd(a,b,x,y);
-	if(!c) x=y=0;
-	else if((!a&&!b&&c)||c%g) return -1;//no solution 
-	else if(!a&&b) x=1,y=c/b;
-	else if(a&&!b) x=c/a,y=-c/a;
-	else
+	
+	if(a==0&&b==0)
 	{
-		a/=g,b/=g,c/=g;
-		x*=c,y*=c;
-		t=x;
-		x%=b;
-		if(x<=0) x+=b;//or x<0
-		ll k=(t-x)/b;
-		y+=k*a;
+		if(c) return -1;
+		x=y=0;
+		return g;
 	}
+	if(c%g) return -1; //no solution
+	dx=b/g,dy=-a/g;
+	x*=c/g,y*=c/g;
+	t=(x%dx-x)/dx;
+	if(x+dx*t<0) t++;
+	x+=dx*t,y+=dy*t;
 	return g;
 }
 ll l[MAX],s[MAX],h;
