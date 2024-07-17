@@ -30,7 +30,7 @@ public:
         double d=0.01*(100-discount);
         for(i=0;i<sz(sentence);i++)
         {
-            if(sentence[i]=='$')
+            if(sentence[i]=='$'&&(!sz(res)||res.back()==' '))
             {
                 res+=sentence[i];
                 int j=i+1;

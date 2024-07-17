@@ -73,7 +73,6 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define debug(...) 233;
 #endif
 /*************  debug end  *************/
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #define mem(a,b) memset((a),(b),sizeof(a))
 #define MP make_pair
 #define pb push_back
@@ -81,13 +80,25 @@ template<class T,class... U>void debug_out(const T& h,const U&... t){cout<<" "<<
 #define se second
 #define sz(x) (int)x.size()
 #define all(x) x.begin(),x.end()
+#define sqr(x) (x)*(x)
 using namespace __gnu_cxx;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> PII;
 typedef pair<ll,ll> PLL;
+typedef pair<int,ll> PIL;
+typedef pair<ll,int> PLI;
 typedef vector<int> VI;
 typedef vector<ll> VL;
+/************* define end  *************/
+void read(int *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(ll *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void read(double *x,int l,int r){for(int i=l;i<=r;i++) read(x[i]);}
+void println(VI x){for(int i=0;i<sz(x);i++) printf("%d%c",x[i]," \n"[i==sz(x)-1]);}
+void println(VL x){for(int i=0;i<sz(x);i++) printf("%lld%c",x[i]," \n"[i==sz(x)-1]);}
+void println(int *x,int l,int r){for(int i=l;i<=r;i++) printf("%d%c",x[i]," \n"[i==r]);}
+void println(ll *x,int l,int r){for(int i=l;i<=r;i++) printf("%lld%c",x[i]," \n"[i==r]);}
+/*************** IO end  ***************/
 void go();
 int main(){
 	#ifdef tokitsukaze
@@ -96,59 +107,40 @@ int main(){
 	go();return 0;
 }
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
 const double PI=acos(-1.0);
 const double eps=1e-6;
-const int MAX=1e6+10;
-const ll mod=1e9+7;
+const int MAX=3e5+10;
+const ll mod=998244353;
 /*********************************  head  *********************************/
+int dp[51][51][51][51],bit[51][51];
+char mp[51][51];
+int dfs(int a,int b,int c,int d)
+{
+	if(dp[a][b][c][d]!=-1) return dp[a][b][c][d];
+	if(bit[c][d]-bit[c][b-1]-bit[a-1][d]+bit[a-1][b-1]) dp[a][b][c][d]=max(c-a+1,d-b+1);
+	else return dp[a][b][c][d]=0;
+	for(int i=a;i<c;i++) dp[a][b][c][d]=min(dp[a][b][c][d],dfs(a,b,i,d)+dfs(i+1,b,c,d));
+	for(int i=b;i<d;i++) dp[a][b][c][d]=min(dp[a][b][c][d],dfs(a,b,c,i)+dfs(a,i+1,c,d));
+	return dp[a][b][c][d];
+}
 void go()
 {
-	int t,i,k,mn,mx,tmp,pos[11],flag[11],cnt,now,s;
-	read(t);
-	while(t--)
+	int n,i,j;
+	while(read(n))
 	{
-		read(mn,k);
-		mx=mn;
-		if(mx==1000000000)
+		for(i=1;i<=n;i++) read(mp[i]+1);
+		mem(bit,0);
+		for(i=1;i<=n;i++)
 		{
-			printf("%d %d\n",mn,mx);
-			continue;
-		}
-		string res=to_string(mx);
-		for(i=0;i<sz(res);i++) pos[i]=i;
-		do
-		{
-			if(res[pos[0]]=='0') continue;
-			tmp=0;
-			for(i=0;i<sz(res);i++)
+			for(j=1;j<=n;j++)
 			{
-				tmp=tmp*10+res[pos[i]]-'0';
-				flag[i]=0;
-			}
-			if(tmp<mx&&tmp>mn) continue;
-			s=0;
-			for(i=0;i<sz(res);i++)
-			{
-				if(flag[pos[i]]) continue;
-				now=pos[i];
-				cnt=0;
-				while(!flag[now])
-				{
-					flag[now]=1;
-					now=pos[now];
-					cnt++;
-				}
-				s+=cnt-1;
-				if(s>k) break;
-			}
-			if(s<=k)
-			{
-				mx=max(mx,tmp);
-				mn=min(mn,tmp);
+				bit[i][j]=bit[i-1][j]+bit[i][j-1]-bit[i-1][j-1]+(mp[i][j]=='#');
+	//			debug(i,j,bit[i][j])
 			}
 		}
-		while(next_permutation(pos,pos+sz(res)));
-		printf("%d %d\n",mn,mx);
+		mem(dp,-1);
+		printf("%d\n",dfs(1,1,n,n));
 	}
 }
+// CF1198D

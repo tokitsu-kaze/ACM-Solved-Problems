@@ -1,67 +1,78 @@
-////////////////////System Comment////////////////////
-////Welcome to Hangzhou Dianzi University Online Judge
-////http://acm.hdu.edu.cn
-//////////////////////////////////////////////////////
-////Username: tokitsukaze
-////Nickname: tokitsukaze
-////Run ID: 
-////Submit time: 2017-09-03 22:06:49
-////Compiler: GUN C++
-//////////////////////////////////////////////////////
-////Problem ID: 3336
-////Problem Title: 
-////Run result: Accept
-////Run time:62MS
-////Run memory:3432KB
-//////////////////System Comment End//////////////////
-#include <bits/stdc++.h>
-#define mem(a,b) memset((a),(b),sizeof(a))
-#define MP make_pair
-#define pb push_back
-#define fi first
-#define se second
-#define sz(x) x.size()
+#include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-const int INF=0x3f3f3f3f;
-const double PI=acos(-1.0);
-const double eps=1e-6;
 const int MAX=2e5+10;
-const ll mod=10007;
-int Next[MAX];
-void getnext(char *b,int *Next,int len)
+const int mod=10007;
+struct KMP
 {
-	int i,j;
-	i=0;
-	j=Next[0]=-1;
-	while(i<len)
+	#define type char
+	int nex[MAX],len;
+	type t[MAX];
+	void get_next(type *s,int n)
 	{
-		if(j==-1||b[i]==b[j]) Next[++i]=++j;
-		else j=Next[j];
+		int i,j;
+		len=n;
+		for(i=1;i<=len;i++) t[i]=s[i];
+		t[len+1]=0;
+		nex[0]=nex[1]=0;
+		j=0;
+		for(i=2;i<=len;i++)
+		{
+			while(j&&t[j+1]!=s[i]) j=nex[j];
+			if(t[j+1]==s[i]) j++;
+			nex[i]=j;
+		}
 	}
+	vector<int> match(type *s,int n)
+	{
+		int i,j;
+		vector<int> res;
+		for(i=1,j=0;i<=n;i++)
+		{
+			while(j&&t[j+1]!=s[i]) j=nex[j];
+			if(t[j+1]==s[i]) j++;
+			if(j==len)
+			{
+				res.push_back(i-len+1);
+				j=nex[j];
+			}
+		}
+		return res;
+	}
+	#undef type
+}kmp;
+/*
+kmp.get_next(t,len); // t[1..len]
+kmp.match(s,n); // s[1..n] return all pos t in s 
+*/
+char s[MAX];
+vector<int> mp[MAX];
+int sz[MAX],ans;
+void dfs(int x)
+{
+	sz[x]=1;
+	for(auto &to:mp[x])
+	{
+		dfs(to);
+		sz[x]+=sz[to];
+	}
+	if(x) ans=(ans+sz[x])%mod;
 }
-char a[MAX];
-int res[MAX];
 int main()
 {
-	int t,ans,i,len;
+	int t,n,i;
 	scanf("%d",&t);
 	while(t--)
 	{
-		scanf("%d%s",&len,a);
-		getnext(a,Next,len);
-		for(i=1;i<=len;i++)
-		{
-			res[i]=1;
-		}
+		scanf("%d",&n);
+		scanf("%s",s+1);
+		kmp.get_next(s,n);
+		for(i=0;i<=n;i++) mp[i].clear();
+		for(i=1;i<=n;i++) mp[kmp.nex[i]].push_back(i);
 		ans=0;
-		for(i=1;i<=len;i++)
-		{
-			res[i]=res[Next[i]]+1;
-			ans+=res[i];
-			ans%=mod;
-		}
+		dfs(0);
 		printf("%d\n",ans);
 	}
 	return 0;
 }
+
