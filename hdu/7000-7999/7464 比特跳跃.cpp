@@ -61,18 +61,18 @@ void sosdp(int n,int k)
 	int i,j,s;
 	s=0;
 	while((1<<s)<=n) s++;
-	for(i=0;i<(1<<s);i++) dp[i]=LLINF;
+	for(i=0;i<=n;i++) dp[i]=dij.dis[i];
 	for(j=0;j<s;j++)
 	{
-		for(i=0;i<(1<<s);i++)
+		for(i=2;i<=n;i++)
 		{
-			if(!((i>>j)&1))
+			if((i>>j)&1)
 			{
-				dp[i^(1<<j)]=min(dp[i^(1<<j)],
-						dij.dis[i]+1LL*k*(i^(1<<j)));
+				dp[i]=min(dp[i],dp[i^(1<<j)]);
 			}
 		}
 	}
+	for(i=2;i<=n;i++) dp[i]=min(dij.dis[i],dp[i]+1LL*k*i);
 }
 int main()
 {
