@@ -172,7 +172,7 @@ int main()
 	rmq.work(tdv.tot,tdv.dis);
 	for(i=1;i<=tdv.tot;i++)
 	{
-		if(tdv.l[i]) q.push({i,tdv.l[i],tdv.r[i],rmq.ask_pmax(tdv.l[i],tdv.r[i])});
+		q.push({i,tdv.l[i],tdv.r[i],rmq.ask_pmax(tdv.l[i],tdv.r[i])});
 	}
 	while(k--)
 	{
