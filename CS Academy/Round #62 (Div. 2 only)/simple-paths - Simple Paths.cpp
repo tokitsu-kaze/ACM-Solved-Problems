@@ -23,8 +23,8 @@ const double PI=acos(-1.0);
 const double eps=1e-6;
 const int MAX=1e3+10;
 const ll mod=1e9+7;
-const int MAXN = 1010;  
-const int MAXM = 1010;  
+const int MAXN = 1010;
+const int MAXM = 2010;
   
 struct Edge {  
     int to,next;  

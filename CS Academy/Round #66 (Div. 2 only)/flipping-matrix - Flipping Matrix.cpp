@@ -24,7 +24,7 @@ const double eps=1e-8;
 const int MAX=2e3+10;
 const ll mod=1e9+7;
 vector<int> mp[MAX];
-int link[MAX],used[MAX];
+int lk[MAX],used[MAX];
 int res[MAX],now[MAX];
 int dfs(int x)
 {
@@ -35,9 +35,9 @@ int dfs(int x)
 		if(!used[to])
 		{
 			used[to]=1;
-			if(link[to]==-1||dfs(link[to]))
+			if(lk[to]==-1||dfs(lk[to]))
 			{
-				link[to]=x;
+				lk[to]=x;
 				return 1;
 			}
 		}
@@ -46,7 +46,7 @@ int dfs(int x)
 }
 int hungary(int n)
 {
-	mem(link,-1);
+	mem(lk,-1);
 	int i,res=0;
 	for(i=1;i<=n;i++)
 	{
@@ -71,7 +71,7 @@ int main()
 		}
 		if(hungary(n)==n)
 		{
-			for(i=1;i<=n;i++) res[i]=link[i],now[i]=i;
+			for(i=1;i<=n;i++) res[i]=lk[i],now[i]=i;
 			for(i=1;i<=n;i++)
 			{
 				if(now[i]!=res[i])
