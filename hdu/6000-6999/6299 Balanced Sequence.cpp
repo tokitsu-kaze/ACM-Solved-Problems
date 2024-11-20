@@ -1,66 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
-#pragma comment(linker, "/STACK:1024000000,1024000000")
-#define mem(a,b) memset((a),(b),sizeof(a))
-#define MP make_pair
-#define pb push_back
-#define fi first
-#define se second
-#define sz(x) (int)x.size()
-#define all(x) x.begin(),x.end()
-#define _GLIBCXX_PERMIT_BACKWARD_HASH
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-typedef long long ll;
-typedef unsigned long long ull;
-typedef pair<int,int> PII;
-typedef pair<ll,ll> PLL;
-typedef vector<int> VI;
-typedef vector<ll> VL;
-struct str_hash{size_t operator()(const string& str)const{return __stl_hash_string(str.c_str());}};
-const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
-const double PI=acos(-1.0);
-const double eps=1e-4;
 const int MAX=1e5+10;
-const ll mod=1e9+7;
-/****************************************  head  ****************************************/
-struct node
-{
-	int l,r,tp;
-	friend bool operator <(node a,node b)
-	{
-		if(a.tp!=b.tp) return a.tp<b.tp;
-		if(a.tp==3)
-		{
-			if(a.l!=b.l) return a.l>b.l;
-			return a.r<b.r;
-		}
-		if(a.tp==1)
-		{
-			if(a.r!=b.r) return a.r<b.r;
-			return a.l>b.l;
-		}
-		return 0;
-	}
-};
+struct node{int l,r;};
 char s[MAX];
+bool cmp(node x,node y)
+{
+	if(min(x.l,y.r)==min(y.l,x.r))
+	{
+		if(x.l==y.l) return x.r<y.r;
+		return x.l>y.l;
+	}
+	return min(x.l,y.r)>min(y.l,x.r);
+}
 int main()
 {
-	ll ans;
-	int t,n,i,j,len,tmp;
-	scanf("%d",&t);
-	while(t--)
+	ios::sync_with_stdio(false);
+	cin.tie(0);cout.tie(0);
+	int T,n,i,j,len,tmp,ans;
+	cin>>T;
+	while(T--)
 	{
-		scanf("%d",&n);
-		ans=0;
+		cin>>n;
 		vector<node> res;
+		ans=0;
 		for(i=0;i<n;i++)
 		{
-			scanf("%s",s);
+			cin>>s;
 			len=strlen(s);
-			node t;
-			t.l=t.r=0;
+			node t={0,0};
 			for(j=0;j<len;j++)
 			{
 				if(s[j]=='(') t.l++;
@@ -74,27 +41,24 @@ int main()
 					else t.r++;
 				}
 			}
-			if(t.l>t.r) t.tp=1;
-			else if(t.l==t.r) t.tp=2;
-			else t.tp=3;
-			res.pb(t);
+			res.push_back(t);
 		}
-		sort(all(res));
+		sort(res.begin(),res.end(),cmp);
 		tmp=0;
-		for(i=0;i<sz(res);i++)
+		for(i=0;i<res.size();i++)
 		{
 			ans+=min(tmp,res[i].r);
 			tmp-=min(tmp,res[i].r);
 			tmp+=res[i].l;
 		}
-		printf("%lld\n",ans*2);
+		cout<<ans*2<<"\n";
 	}
 	return 0;
 }
 /*
-100
+1
 3
 (((
 )))
-)( 
+)(
 */

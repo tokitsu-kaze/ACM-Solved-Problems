@@ -55,7 +55,7 @@ struct Segment_Tree
 	node merge_node(node x,node y)
 	{
 		node res;
-		res.v=(x.v&y.v);
+		res.v=(x.v|y.v);
 		return res;
 	}
 	void pushup(int id){t[id]=merge_node(t[ls],t[rs]);}
@@ -147,7 +147,7 @@ public:
         	while(l<r)
         	{
         		mid=(l+r)>>1;
-        		if(tr.ask(i,mid)<=k) r=mid;
+        		if(tr.ask(i,mid)>=k) r=mid;
         		else l=mid+1;
 			}
 			ans=min(ans,abs(tr.ask(i,l)-k));
@@ -156,7 +156,7 @@ public:
         	while(l<r)
         	{
         		mid=(l+r)>>1;
-        		if(tr.ask(i,mid+1)>=k) l=mid+1;
+        		if(tr.ask(i,mid+1)<=k) l=mid+1;
         		else r=mid;
 			}
 			ans=min(ans,abs(tr.ask(i,l)-k));
