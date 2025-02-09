@@ -6,7 +6,7 @@ const int MAX=2e5+10;
 struct Segment_Tree
 {
 	#define type int
-	static const type inf=INF;
+	static const type inf=2e9;
 	#define ls (id<<1)
 	#define rs (id<<1|1)
 	int n,ql,qr,qop;
