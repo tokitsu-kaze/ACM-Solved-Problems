@@ -3,6 +3,7 @@ using namespace std;
 typedef long long ll;
 const int INF=0x3f3f3f3f;
 const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
+const int mod=998244353;
 const int MAX=2e5+10;
 struct Range_Mex
 {
@@ -60,64 +61,17 @@ struct Range_Mex
 rm.work(n,a); a[1..n]
 rm.ask_mex(l,r);
 */
-int a[MAX],premex[MAX],sufmex[MAX];
-ll sum[MAX];
+int a[MAX];
 int main()
 {
-	int T,n,i,j,now,ok;
-	ll mn,mx;
-	scanf("%d",&T);
-	while(T--)
+	int n,q,i,l,r;
+	scanf("%d%d",&n,&q);
+	for(i=1;i<=n;i++) scanf("%d",&a[i]);
+	rm.work(n,a);
+	while(q--)
 	{
-		scanf("%d",&n);
-		sum[0]=0;
-		for(i=1;i<=n;i++)
-		{
-			scanf("%d",&a[i]);
-			sum[i]=sum[i-1]+a[i];
-		}
-		rm.work(n,a);
-		set<int> s;
-		now=0;
-		for(i=1;i<=n;i++)
-		{
-			s.insert(a[i]);
-			while(s.count(now)) now++;
-			premex[i]=now;
-		}
-		s.clear();
-		now=0;
-		for(i=n;i;i--)
-		{
-			s.insert(a[i]);
-			while(s.count(now)) now++;
-			sufmex[i]=now;
-		}
-		mn=LLINF;
-		mx=-LLINF;
-		ok=0;
-		for(i=1,j=1;i<=n;i++)
-		{
-			if(j<=i) j=i+1;
-			while(j+1<n && rm.ask_mex(i+1,j)<premex[i]) j++;
-			if(j<n && rm.ask_mex(i+1,j)==premex[i] && sufmex[j+1]==premex[i])
-			{
-				mx=max(mx,sum[i]-(sum[j]-sum[i])+(sum[n]-sum[j]));
-				ok=1;
-			}
-		}
-		for(i=1,j=1;i<=n;i++)
-		{
-			if(j<=i) j=i+1;
-			while(j+1<n && rm.ask_mex(i+1,j+1)<=premex[i] && sufmex[j+2]>=premex[i]) j++;
-			if(j<n && rm.ask_mex(i+1,j)==premex[i] && sufmex[j+1]==premex[i])
-			{
-				mn=min(mn,sum[i]-(sum[j]-sum[i])+(sum[n]-sum[j]));
-				ok=1;
-			}
-		}
-		if(ok==0) puts("-1 -1");
-		else printf("%lld %lld\n",mn,mx);
+		scanf("%d%d",&l,&r);
+		printf("%d\n",rm.ask_mex(l,r));
 	}
 	return 0;
 }
