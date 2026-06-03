@@ -42,6 +42,7 @@ ll gao(int x,int r,int p)
 int main()
 {
 	int n,p,i,q,l,r;
+	mp.clear();
 	scanf("%d%d",&n,&p);
 	for(i=1;i<=n;i++) scanf("%d",&w[i]);
 	scanf("%d",&q);
