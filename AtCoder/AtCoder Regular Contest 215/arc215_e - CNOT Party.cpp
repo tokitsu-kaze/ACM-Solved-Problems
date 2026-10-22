@@ -10,7 +10,7 @@ struct Strongly_Connected_Components
 	int scc_cnt,tot;
 	int low[MAX],dfn[MAX],col[MAX],sz[MAX];
 	int st[MAX],top,flag[MAX];
-	vector<node> *mp;
+	vector<node> mp[MAX];
 	void dfs(int x)
 	{
 		int tmp;
@@ -45,9 +45,8 @@ struct Strongly_Connected_Components
 		for(i=1;i<=n;i++)
 		{
 			col[i]=sz[i]=flag[i]=dfn[i]=0;
-//			mp[i].assign(_mp[i].begin(),_mp[i].end());
+			mp[i].assign(_mp[i].begin(),_mp[i].end());
 		}
-		mp=_mp;
 		scc_cnt=top=tot=0;
 		for(i=1;i<=n;i++)
 		{

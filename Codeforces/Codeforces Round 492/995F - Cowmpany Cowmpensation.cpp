@@ -1,121 +1,185 @@
 #include <bits/stdc++.h>
-#pragma comment(linker, "/STACK:1024000000,1024000000")
-#define mem(a,b) memset((a),(b),sizeof(a))
-#define MP make_pair
-#define pb push_back
-#define fi first
-#define se second
-#define sz(x) (int)x.size()
-#define all(x) x.begin(),x.end()
 using namespace std;
-#define _GLIBCXX_PERMIT_BACKWARD_HASH
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-struct str_hash{size_t operator()(const string& str)const{return __stl_hash_string(str.c_str());}};
 typedef long long ll;
 typedef unsigned long long ull;
-#define PII pair<int,int>
-#define PLL pair<ll,ll>
-#define PDD pair<double,double>
-#define VI vector<int>
-#define VL vector<ll>
 const int INF=0x3f3f3f3f;
-const ll LLINF=0x3f3f3f3f3f3f3f3f;
-const double PI=acos(-1.0);
-const double eps=1e-4;
-const int MAX=3e3+10;
-const ll mod=1e9+7;
-namespace polysum {
-	#define rep(i,a,n) for (int i=a;i<n;i++)
-	#define per(i,a,n) for (int i=n-1;i>=a;i--)
-	const int D=101000;
-	ll a[D],f[D],g[D],p[D],p1[D],p2[D],b[D],h[D][2],C[D];
-	ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
-	ll calcn(int d,ll *a,ll n) { // a[0].. a[d]  a[n] 
-		if (n<=d) return a[n];
-		p1[0]=p2[0]=1;
-		rep(i,0,d+1) {
-			ll t=(n-i+mod)%mod;
-			p1[i+1]=p1[i]*t%mod;
+const ll LLINF=0x3f3f3f3f3f3f3f3fLL;
+const int MAX=3000+10;
+const int mod=1e9+7;
+struct Combinatorics
+{
+	vector<int> inv_e,fac,invfac;
+	int last_n;
+	Combinatorics(){last_n=0;init(1);}
+	void init(int n)
+	{
+		if(n<=last_n) return;
+		inv_e.resize(n+1);
+		fac.resize(n+1);
+		invfac.resize(n+1);
+		if(last_n==0)
+		{
+			inv_e[1]=1;
+			fac[0]=fac[1]=1;
+			invfac[0]=invfac[1]=1;
+			last_n=1;
 		}
-		rep(i,0,d+1) {
-			ll t=(n-d+i+mod)%mod;
-			p2[i+1]=p2[i]*t%mod;
+		for(int i=last_n+1;i<=n;i++)
+		{
+			inv_e[i]=1LL*(mod-mod/i)*inv_e[mod%i]%mod;
+			fac[i]=1LL*fac[i-1]*i%mod;
+			invfac[i]=1LL*invfac[i-1]*inv_e[i]%mod;
 		}
-		ll ans=0;
-		rep(i,0,d+1) {
-			ll t=g[i]*g[d-i]%mod*p1[i]%mod*p2[d-i]%mod*a[i]%mod;
-			if ((d-i)&1) ans=(ans-t+mod)%mod;
+		last_n=n;
+	}
+	ll qpow(ll a,ll b)
+	{
+		ll res=1;
+		a=(a%mod+mod)%mod;
+		while(b>0)
+		{
+			if(b&1) res=res*a%mod;
+			a=a*a%mod;
+			b>>=1;
+		}
+		return res;
+	}
+	ll inv(ll x)
+	{
+		assert(x>=1);
+		if(x<=last_n) return inv_e[x];
+		else return qpow(x%mod,mod-2);
+	}
+	ll C(int n,int m)
+	{
+		if(m>n||m<0||n<0) return 0;
+		return 1LL*fac[n]*invfac[m]%mod*invfac[n-m]%mod;
+	}
+	ll A(int n,int m)
+	{
+		if(m>n||m<0||n<0) return 0;
+		return 1LL*fac[n]*invfac[n-m]%mod;
+	}
+}comb;
+struct PolySum
+{
+	ll cal_n(int d,int *x,int *y,ll n) // O(d^2)
+	{
+		int i,j;
+		ll ans,fz,fm;
+		n%=mod;
+		ans=0;
+		for(i=0;i<=d;i++)
+		{
+			fz=y[i];
+			fm=1;
+			for(j=0;j<=d;j++)
+			{
+				if(i==j)continue;
+				fz=fz*(n-x[j]+mod)%mod;
+				fm=fm*(x[i]-x[j]+mod)%mod;
+			}
+			ans=(ans+fz*comb.inv(fm))%mod;
+		}
+		return ans;
+	}
+	ll cal_n(int d,int *y,ll n) // O(d)
+	{
+		if(n<=d) return y[n];
+		n%=mod;
+		int i;
+		ll ans,fz,invfm,t;
+		vector<int> pre(d+1),suf(d+2);
+		pre[0]=suf[d+1]=1;
+		for(i=1;i<=d;i++) pre[i]=1LL*pre[i-1]*(n-i+1+mod)%mod;
+		for(i=d;i>=0;i--) suf[i]=1LL*suf[i+1]*(n-i+mod)%mod;
+		ans=0;
+		comb.init(d);
+		for(i=0;i<=d;i++)
+		{
+			fz=1LL*pre[i]*suf[i+1]%mod;
+			invfm=1LL*comb.invfac[i]*comb.invfac[d-i]%mod;
+			t=y[i]*fz%mod*invfm%mod;
+			if((d-i)&1) ans=(ans-t+mod)%mod;
 			else ans=(ans+t)%mod;
 		}
 		return ans;
 	}
-	void init(int M) {
-		f[0]=f[1]=g[0]=g[1]=1;
-		rep(i,2,M+5) f[i]=f[i-1]*i%mod;
-		g[M+4]=powmod(f[M+4],mod-2);
-		per(i,1,M+4) g[i]=g[i+1]*(i+1)%mod;
+	ll polysum(int d,int *y,ll n) // O(d)
+	{
+		int i;
+		vector<int> tmp(d+2);
+		for(i=0;i<=d;i++) tmp[i]=y[i];
+		tmp[d+1]=cal_n(d,tmp.data(),d+1);
+		for(i=1;i<=d+1;i++) tmp[i]=(tmp[i-1]+tmp[i])%mod;
+		return cal_n(d+1,tmp.data(),n);
 	}
-	ll polysum(ll n,ll *a,ll m) { // a[0].. a[m] \sum_{i=0}^{n-1} a[i]
-		a[m+1]=calcn(m,a,m+1);
-		rep(i,1,m+2) a[i]=(a[i-1]+a[i])%mod;
-		return calcn(m+1,a,n-1);
-	}
-	ll qpolysum(ll R,ll n,ll *a,ll m) { // a[0].. a[m] \sum_{i=0}^{n-1} a[i]*R^i
-		if (R==1) return polysum(n,a,m);
-		a[m+1]=calcn(m,a,m+1);
-		ll r=powmod(R,mod-2),p3=0,p4=0,c,ans;
-		h[0][0]=0;h[0][1]=1;
-		rep(i,1,m+2) {
-			h[i][0]=(h[i-1][0]+a[i-1])*r%mod;
-			h[i][1]=h[i-1][1]*r%mod;
+	ll qpolysum(int d,int *y,ll r,ll n) // O(d)
+	{
+		r=(r%mod+mod)%mod;
+		if(r==0) return y[0];
+		if(r==1) return polysum(d,y,n);
+		int i,sgn;
+		ll invr,sumb,sumk,c0,t,ans;
+		vector<int> k(d+2),b(d+2);
+		comb.init(d+1);
+		invr=comb.inv(r);
+		k[0]=1;
+		b[0]=0;
+		for(i=1;i<=d+1;i++)
+		{
+			k[i]=k[i-1]*invr%mod;
+			b[i]=(b[i-1]+y[i-1])%mod*invr%mod;
 		}
-		rep(i,0,m+2) {
-			ll t=g[i]*g[m+1-i]%mod;
-			if (i&1) p3=((p3-h[i][0]*t)%mod+mod)%mod,p4=((p4-h[i][1]*t)%mod+mod)%mod;
-			else p3=(p3+h[i][0]*t)%mod,p4=(p4+h[i][1]*t)%mod;
+		sumk=sumb=0;
+		for(i=0;i<=d+1;i++)
+		{
+			t=1LL*comb.invfac[i]*comb.invfac[d+1-i]%mod;
+			sgn=(i&1)?(-1):1;
+			sumk=(sumk+sgn*k[i]*t)%mod;
+			sumb=(sumb+sgn*b[i]*t)%mod;
 		}
-		c=powmod(p4,mod-2)*(mod-p3)%mod;
-		rep(i,0,m+2) h[i][0]=(h[i][0]+h[i][1]*c)%mod;
-		rep(i,0,m+2) C[i]=h[i][0];
-		ans=(calcn(m,C,n)*powmod(R,n)-c)%mod;
-		if (ans<0) ans+=mod;
+		if(sumk<0) sumk+=mod;
+		if(sumb<0) sumb+=mod;
+		c0=comb.inv(sumk)*(mod-sumb)%mod;
+		vector<int> c(d+1);
+		for(i=0;i<=d;i++) c[i]=(k[i]*c0+b[i])%mod;
+		ans=(cal_n(d,c.data(),n+1)*comb.qpow(r,n+1)%mod-c0+mod)%mod;
 		return ans;
 	}
-}// polysum::init();
-ll dp[MAX][MAX];
-VI mp[MAX];
+}lg;
+/*
+lg.cal_n(d,x,y,n) // (x[0],y[0])..(x[d],y[d]) -> y[n]
+lg.cal_n(d,y,n) // y[0].. y[d] -> y[n]
+lg.polysum(d,y,n) // y[0]..y[d] -> \sum_{i=0}^{n} y[i]
+lg.qpolysum(d,y,r,n) // y[0]..y[d] -> \sum_{i=0}^{n} y[i]*r^i
+*/
+vector<int> mp[MAX];
+int n,d,dp[MAX][MAX],sum[MAX][MAX];
+void dfs(int x)
+{
+	int i;
+	dp[x][0]=0;
+	for(i=1;i<=n+1;i++) dp[x][i]=1;
+	for(auto &to:mp[x])
+	{
+		dfs(to);
+		for(i=1;i<=n+1;i++) dp[x][i]=1LL*dp[x][i]*sum[to][i]%mod;
+	}
+	sum[x][0]=0;
+	for(i=1;i<=n+1;i++) sum[x][i]=(sum[x][i-1]+dp[x][i])%mod;
+}
 int main()
 {
-	int n,d,i,x;
-	polysum::init(3030);
-	while(~scanf("%d%d",&n,&d))
+	int i,fa;
+	scanf("%d%d",&n,&d);
+	for(i=1;i<=n;i++) mp[i].clear();
+	for(i=2;i<=n;i++)
 	{
-		for(i=1;i<=n;i++) mp[i].clear();
-		for(i=2;i<=n;i++)
-		{
-			scanf("%d",&x);
-			mp[x].pb(i);
-		}
-		function<void(int)> dfs=[&](int x)
-		{
-			ll tmp;
-			for(i=1;i<=n+1;i++) dp[x][i]=1;
-			dp[x][0]=0;
-			for(auto to:mp[x])
-			{
-				dfs(to);
-				tmp=0;
-				for(i=1;i<=n+1;i++)
-				{
-					(tmp+=dp[to][i])%=mod;
-					(dp[x][i]*=tmp)%=mod;
-				}
-			}
-		};
-		dfs(1);
-		for(i=1;i<=n+1;i++) (dp[1][i]+=dp[1][i-1])%=mod;
-		printf("%lld\n",polysum::calcn(n,dp[1]+1,d-1));
+		scanf("%d",&fa);
+		mp[fa].push_back(i);
 	}
+	dfs(1);
+	printf("%lld\n",lg.cal_n(n,sum[1]+1,d-1));
 	return 0;
-} 
+}
